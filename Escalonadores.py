@@ -56,7 +56,7 @@ def EscalonadorGenerico(
             processo.tempo_quantum = fila.quantum
             processo.filaAtual = fila
             processo.status = Status.EXECUTANDO
-            print(f"Processo P{processo.pid} foi selecionado da fila de prioridade {filas.index(fila)} com quantum {fila.quantum}.\n")
+            print(f"Processo [P{processo.pid}] foi selecionado da fila de prioridade {filas.index(fila)} com quantum {fila.quantum}.\n")
             return processo
 
     return None

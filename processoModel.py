@@ -20,31 +20,22 @@ class TipoIO(Enum):
     FITA        = 1
     IMPRESSORA  = 2
 
+DURACAO_IO = {
+    TipoIO.DISCO: 3,
+    TipoIO.FITA: 7,
+    TipoIO.IMPRESSORA: 10
+}
+
+
 class EventoIO:
 
-    def __init__(
-        self,
-        tempo_cpu_disparo: int,
-        tipo: TipoIO
-    ):
-        # Quantas unidades de CPU o processo precisa ter 0# executado para solicitar esta E/S
-        self.tempo_cpu_disparo: int = tempo_cpu_disparo
-        self.tipo: TipoIO           = tipo
-        self.duracao: int           = 0
-        self.CalculateDuracao()
+    def __init__(self, tempo_cpu_disparo: int, tipo: TipoIO):
 
-    def CalculateDuracao(self) -> int:
-        # fazendo amnualmente aqui mas o ideal é que fosse um dict ou algo do tipo para mapear os tipos de E/S para suas durações
-        if self.tipo == TipoIO.DISCO:
-            self.duracao = 3
-        elif self.tipo == TipoIO.FITA:
-            self.duracao = 7
-        elif self.tipo == TipoIO.IMPRESSORA:
-            self.duracao = 10
-        else:
-            raise ValueError("Tipo de E/S inválido.")
-        
-        return self.duracao
+        # Quantas unidades de CPU o processo precisa ter
+        # executado para solicitar esta E/S
+        self.tempo_cpu_disparo: int = tempo_cpu_disparo
+        self.tipo: TipoIO = tipo
+        self.duracao: int = DURACAO_IO[tipo]
 
 class Processo:
 
@@ -89,7 +80,13 @@ class Processo:
         self.indice_proximo_io += 1
 
     def CalcularTempoTotal(self) -> int:
+        ## calcula a unidade de tempo total que esse processo deve passar pela CPU + E/S para ser finalizado
         self.tempo_restante = self.tempo_cpu
         if self.eventos_io is not None:
             for evento in self.eventos_io:
                 self.tempo_restante += evento.duracao
+
+    def CalcularTurnaroundTime(self) -> int:
+        if self.tempo_termino == -1:
+            return None
+        return self.tempo_termino - self.chegada
