@@ -10,7 +10,6 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -219,4 +218,3 @@ __marimo__/
 
 # Node / visualizador React
 node_modules/
-dist/
