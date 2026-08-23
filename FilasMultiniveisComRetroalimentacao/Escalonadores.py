@@ -55,7 +55,7 @@ def EscalonadorGenerico(
         if fila.fila.qsize() > 0:
             processo = fila.fila.get()
             processo.tempo_quantum = fila.quantum
-            processo.filaAtual = fila
+            processo.DefinirFila(fila, filas.index(fila))
             processo.status = Status.EXECUTANDO
             Trace.Evento(f"Processo [P{processo.pid}] foi selecionado da fila de prioridade {filas.index(fila)} com quantum {fila.quantum}.\n")
             return processo

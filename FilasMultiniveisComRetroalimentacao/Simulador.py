@@ -4,7 +4,7 @@ from FilaQuantum import FilaIO, FilaQuantum
 from Escalonadores import EscalonadorGenerico
 
 
-def SimuladorIOMultiFila(lista_processos: list[Processo], fila_alta: FilaQuantum, fila_baixa: FilaQuantum, fila_IO: FilaIO) -> list[Processo]:
+def SimuladorIOMultiFila(lista_processos: list[Processo], filas: list[FilaQuantum], fila_IO: FilaIO) -> list[Processo]:
     # Observação: como é uma fila de IO, não tem prioridade e 1 IO é tratado de cada vez, caso o contrario todos os IOs seriam tratado simultaneamente
     # em teoria cada periferico teria sua propria fila de IO mas vamos simplificar e tratar todos os IOs como uma unica fila de IO, mas o ideal seria ter uma fila para cada tipo de IO, mas vamos simplificar por enquanto
 
@@ -12,8 +12,7 @@ def SimuladorIOMultiFila(lista_processos: list[Processo], fila_alta: FilaQuantum
     finalizados: list[Processo] = []
     processoAtualCPU: Processo = None
 
-    # só deixando dessa maneira atualmente caso seja necessário adicionar mais filas futuramente, mas atualmente só tem duas filas de CPU
-    filas: list[FilaQuantum] = [fila_alta, fila_baixa]
+    fila_alta: FilaQuantum = filas[0]
 
     Trace.Iniciar(
         "Filas multiníveis com retroalimentação",
@@ -93,6 +92,7 @@ def ProcessarChegada(processos: list[Processo], tempo: int, fila_alta: FilaQuant
         if processo.chegada == tempo and processo.status == Status.NOVO:
             # adiciona o processo na fila de alta prioridade
             fila_alta.fila.put(processo)
+            processo.DefinirFila(fila_alta, 0)
             processo.status = Status.PRONTO
             Trace.Evento(
                 f"Processo [P{processo.pid}] Inicializou na fila de alta prioridade no tempo {tempo}.")
@@ -145,7 +145,7 @@ def GerenciaFilaGenerica(processo: Processo, lista_filas: list[FilaQuantum]) -> 
                     if i == len(lista_filas) - 1:
                         lista_filas[i].fila.put(processo)
                         processo.status = Status.PRONTO
-                        processo.filaAtual = lista_filas[i]
+                        processo.DefinirFila(lista_filas[i], i)
                         Trace.Evento(
                             f"Processo [P{processo.pid}] permaneceu na fila de prioridade {i}.")
                         return True
@@ -154,7 +154,7 @@ def GerenciaFilaGenerica(processo: Processo, lista_filas: list[FilaQuantum]) -> 
                         # move o processo para a próxima fila
                         lista_filas[i + 1].fila.put(processo)
                         processo.status = Status.PRONTO
-                        processo.filaAtual = lista_filas[i + 1]
+                        processo.DefinirFila(lista_filas[i + 1], i + 1)
                         Trace.Evento(
                             f"Processo [P{processo.pid}] foi movido para a fila de prioridade {i + 1}.")
                         return True
@@ -220,7 +220,7 @@ def GerenciarFilaPosIO(processo: Processo, lista_filas: list[FilaQuantum]) -> bo
             # coloca na fila de baixa prioridade, que é a ultima fila da lista de filas
             lista_filas[len(lista_filas) - 1].fila.put(processo)
             processo.status = Status.PRONTO
-            processo.filaAtual = lista_filas[len(lista_filas) - 1]
+            processo.DefinirFila(lista_filas[-1], len(lista_filas) - 1)
             Trace.Evento(
                 f"Processo [P{processo.pid}] foi movido para a fila de prioridade {len(lista_filas) - 1} após E/S do tipo DISCO.")
             return True
@@ -229,7 +229,7 @@ def GerenciarFilaPosIO(processo: Processo, lista_filas: list[FilaQuantum]) -> bo
             # coloca na fila de alta prioridade, que é a primeira fila da lista de filas
             lista_filas[0].fila.put(processo)
             processo.status = Status.PRONTO
-            processo.filaAtual = lista_filas[0]
+            processo.DefinirFila(lista_filas[0], 0)
             Trace.Evento(
                 f"Processo [P{processo.pid}] foi movido para a fila de prioridade 0 após E/S do tipo FITA.")
             return True
@@ -238,7 +238,7 @@ def GerenciarFilaPosIO(processo: Processo, lista_filas: list[FilaQuantum]) -> bo
             # coloca na fila de alta prioridade, que é a primeira fila da lista de filas
             lista_filas[0].fila.put(processo)
             processo.status = Status.PRONTO
-            processo.filaAtual = lista_filas[0]
+            processo.DefinirFila(lista_filas[0], 0)
             Trace.Evento(
                 f"Processo [P{processo.pid}] foi movido para a fila de prioridade 0 após E/S do tipo IMPRESSORA.")
             return True

@@ -41,8 +41,9 @@ filaQuantum_6 = FilaQuantum(6)
 
 fila_IO = FilaIO()
 
-filaQuantum_high = FilaQuantum(QUANTUM_ALTA)  # 2 de quantum
-filaQuantum_low = FilaQuantum(5)  # 5 de quantum
+filaQuantum_high = FilaQuantum(QUANTUM_ALTA)
+filaQuantum_media = FilaQuantum(QUANTUM_MEDIA)
+filaQuantum_low = FilaQuantum(QUANTUM_BAIXA)
 
 processosIO: list[Processo] = [
     Processo(pid=1, chegada=0, tempo_cpu=5, prioridade=Prioridade.ALTA, eventos_io=[
@@ -71,7 +72,7 @@ if __name__ == "__main__":
     # SimuladorTeste(processos, filaQuantum_2, filaQuantum_4, filaQuantum_6)
 
     # colocar input ou outro metodo de passar o tempo, pode colocar uma classe para fazer management de teste tambem, fica "mais modular"
-    # SimuladorIOMultiFila(processosIO, filaQuantum_high, filaQuantum_low, fila_IO) ## processo teste manual
+    # SimuladorIOMultiFila(processosIO, [filaQuantum_high, filaQuantum_media, filaQuantum_low], fila_IO)  ## processo teste manual
 
     argumentos = LerArgumentos()
 
@@ -80,7 +81,7 @@ if __name__ == "__main__":
     processosGerados: list[Processo] = gerador.GerarProcessos(
         argumentos.processos)
     finalizados: list[Processo] = SimuladorIOMultiFila(
-        processosGerados, filaQuantum_high, filaQuantum_low, fila_IO)
+        processosGerados, [filaQuantum_high, filaQuantum_media, filaQuantum_low], fila_IO)
 
     ImprimirTurnaround(finalizados)
     Trace.Salvar(argumentos.trace)

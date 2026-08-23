@@ -42,10 +42,10 @@ class EventoIO:
 
 class Processo:
 
-    def __init__(self, pid: int, chegada: int, tempo_cpu: int, prioridade: Prioridade = Prioridade.ALTA, eventos_io: list[EventoIO] = None):
+    def __init__(self, pid: int, chegada: int, tempo_cpu: int, prioridade: Prioridade = Prioridade.ALTA, eventos_io: list[EventoIO] = None, ppid: int = 0):
 
         self.pid: int = pid
-        self.ppid: int = 0
+        self.ppid: int = ppid
 
         self.chegada: int = chegada  # unidade de tempo que o processo chega na fila de pronto
 
@@ -89,6 +89,11 @@ class Processo:
         self.tempo_restante = self.tempo_cpu
         for evento in self.eventos_io:
             self.tempo_restante += evento.duracao
+
+    def DefinirFila(self, fila, indice: int):
+        self.filaAtual = fila
+        prioridades = list(Prioridade)
+        self.prioridade = prioridades[min(indice, len(prioridades) - 1)]
 
     def TempoCpuRestante(self) -> int:
         return self.tempo_cpu - self.tempo_cpu_executado
