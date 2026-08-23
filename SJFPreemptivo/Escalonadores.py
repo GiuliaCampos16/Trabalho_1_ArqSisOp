@@ -1,6 +1,7 @@
 ## Escalonador do SJF preemptivo (SRTF): escolhe sempre o processo com menor
 ## tempo de CPU restante. Empate fica com quem entrou antes na fila.
 
+import Trace
 from FilaQuantum import FilaProntos
 from processoModel import Processo, Status
 
@@ -14,7 +15,7 @@ def EscalonadorSJF(fila_prontos: FilaProntos) -> Processo:
     fila_prontos.fila.remove(processo)
     processo.status = Status.EXECUTANDO
 
-    print(f"Processo [P{processo.pid}] foi selecionado com {processo.TempoCpuRestante()} u.t. de CPU restante.\n")
+    Trace.Evento(f"Processo [P{processo.pid}] foi selecionado com {processo.TempoCpuRestante()} u.t. de CPU restante.\n")
     return processo
 
 

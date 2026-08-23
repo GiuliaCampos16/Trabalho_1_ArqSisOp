@@ -3,12 +3,15 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "comum"))
 
+import Trace
 from FilaQuantum import FilaIO, FilaProntos
 from processoModel import Processo
 from Simulador import SimuladorSJFPreemptivo
 from GeradorProcessos import GeradorProcessos
+from Relatorio import ImprimirTurnaround
 
 MAX_PROCESSOS = 10
+ARQUIVO_TRACE = "../visualizador/public/trace-sjf.json"
 
 fila_prontos = FilaProntos()
 fila_IO = FilaIO()
@@ -33,3 +36,6 @@ if __name__ == "__main__":
     gerador: GeradorProcessos = GeradorProcessos(MAX_PROCESSOS, max_eventos_io=2, tempo_cpu_min=5, tempo_cpu_max=30, chegada_min=0, chegada_max=10)
     processosGerados: list[Processo] = gerador.GerarProcessos()
     finalizados: list[Processo] = SimuladorSJFPreemptivo(processosGerados, fila_prontos, fila_IO)
+
+    ImprimirTurnaround(finalizados)
+    Trace.Salvar(ARQUIVO_TRACE)

@@ -4,6 +4,7 @@
 
 ## Esse primeiro escalonador é só para testar o exemplo da professora,
 #  para ver se o algoritmo está funcionando corretamente
+import Trace
 from FilaQuantum import FilaQuantum
 from processoModel import Processo, Status
 
@@ -56,7 +57,7 @@ def EscalonadorGenerico(
             processo.tempo_quantum = fila.quantum
             processo.filaAtual = fila
             processo.status = Status.EXECUTANDO
-            print(f"Processo [P{processo.pid}] foi selecionado da fila de prioridade {filas.index(fila)} com quantum {fila.quantum}.\n")
+            Trace.Evento(f"Processo [P{processo.pid}] foi selecionado da fila de prioridade {filas.index(fila)} com quantum {fila.quantum}.\n")
             return processo
 
     return None

@@ -1,6 +1,7 @@
+import Trace
 from processoModel import Processo, Status, TipoIO
 from FilaQuantum import FilaIO, FilaQuantum
-from Escalonadores import EscalonadorTeste, EscalonadorGenerico
+from Escalonadores import EscalonadorGenerico
 
 
 def SimuladorIOMultiFila(lista_processos: list[Processo], fila_alta: FilaQuantum, fila_baixa: FilaQuantum, fila_IO: FilaIO) -> list[Processo]:
@@ -13,6 +14,12 @@ def SimuladorIOMultiFila(lista_processos: list[Processo], fila_alta: FilaQuantum
 
     # só deixando dessa maneira atualmente caso seja necessário adicionar mais filas futuramente, mas atualmente só tem duas filas de CPU
     filas: list[FilaQuantum] = [fila_alta, fila_baixa]
+
+    Trace.Iniciar(
+        "Filas multiníveis com retroalimentação",
+        [f"Prioridade {i} (q={fila.quantum})" for i, fila in enumerate(filas)],
+        lista_processos
+    )
 
     # enquanto todos os processos não forem finalizados, o simulador continua rodando
     while len(finalizados) < len(lista_processos):
@@ -34,11 +41,13 @@ def SimuladorIOMultiFila(lista_processos: list[Processo], fila_alta: FilaQuantum
                     processo.status = Status.TERMINADO
                     processo.tempo_termino = tempo + 1
                     finalizados.append(processo)
-                    print(
+                    Trace.Evento(
                         f"Processo [P{processo.pid}] terminou de executar no tempo {tempo + 1}.")
                 else:
                     # pega o primeiro processo da fila de IO e coloca na fila de CPU apropriada
                     GerenciarFilaPosIO(processo, filas)
+
+        executouNaCPU: Processo = processoAtualCPU
 
         if processoAtualCPU is not None:
 
@@ -52,7 +61,7 @@ def SimuladorIOMultiFila(lista_processos: list[Processo], fila_alta: FilaQuantum
             if solicitou_io == True:
                 fila_IO.fila.put(processoAtualCPU)
                 processoAtualCPU.GerenciarIO()
-                print(
+                Trace.Evento(
                     f"Processo [P{processoAtualCPU.pid}] foi movido para a fila de E/S.")
                 processoAtualCPU = None
 
@@ -61,7 +70,11 @@ def SimuladorIOMultiFila(lista_processos: list[Processo], fila_alta: FilaQuantum
             if preempted == True:
                 processoAtualCPU = None
 
+        Trace.FecharPasso(tempo, executouNaCPU, filas, fila_IO)
+
         tempo += 1
+
+    Trace.Finalizar(finalizados)
 
     for processo in finalizados:
         print(
@@ -81,7 +94,7 @@ def ProcessarChegada(processos: list[Processo], tempo: int, fila_alta: FilaQuant
             # adiciona o processo na fila de alta prioridade
             fila_alta.fila.put(processo)
             processo.status = Status.PRONTO
-            print(
+            Trace.Evento(
                 f"Processo [P{processo.pid}] Inicializou na fila de alta prioridade no tempo {tempo}.")
 
 
@@ -93,7 +106,7 @@ def ProcessarExecucao(processo: Processo, tempo: int) -> Status:
         processo.tempo_cpu_executado += 1
         processo.tempo_quantum -= 1
 
-        print(
+        Trace.Evento(
             f"Processo [P{processo.pid}] está executando "
             f"no intervalo [{tempo}, {tempo + 1}]. "
             f"CPU restante: {processo.TempoCpuRestante()}. "
@@ -109,7 +122,7 @@ def ProcessarExecucao(processo: Processo, tempo: int) -> Status:
         # processo.tempo_termino = tempo checando pois o teste n tava batendo com os tempo sem usar tempo +1
         # print(f"Processo P{processo.pid} terminou de executar no tempo {tempo}.")
         processo.tempo_termino = tempo + 1
-        print(
+        Trace.Evento(
             f"Processo [P{processo.pid}] terminou de executar no tempo {tempo + 1}.")
 
     return processo.status
@@ -133,7 +146,7 @@ def GerenciaFilaGenerica(processo: Processo, lista_filas: list[FilaQuantum]) -> 
                         lista_filas[i].fila.put(processo)
                         processo.status = Status.PRONTO
                         processo.filaAtual = lista_filas[i]
-                        print(
+                        Trace.Evento(
                             f"Processo [P{processo.pid}] permaneceu na fila de prioridade {i}.")
                         return True
 
@@ -142,7 +155,7 @@ def GerenciaFilaGenerica(processo: Processo, lista_filas: list[FilaQuantum]) -> 
                         lista_filas[i + 1].fila.put(processo)
                         processo.status = Status.PRONTO
                         processo.filaAtual = lista_filas[i + 1]
-                        print(
+                        Trace.Evento(
                             f"Processo [P{processo.pid}] foi movido para a fila de prioridade {i + 1}.")
                         return True
 
@@ -161,7 +174,7 @@ def ChecarSolicitarIO(processo: Processo, tempo: int) -> bool:
         # checa para ver se o processo solicitou E/S no tempo atual
         if processo.tempo_cpu_executado == evento_io.tempo_cpu_disparo:
             # tempo + 1 para bater com o fim do intervalo [tempo, tempo + 1] que acabou de executar
-            print(
+            Trace.Evento(
                 f"Processo [P{processo.pid}] solicitou E/S do tipo {evento_io.tipo.name} no tempo {tempo + 1}.")
             return True  # coloca o processo atual na fila de E/S e retorna True para indicar que o processo solicitou E/S
 
@@ -179,13 +192,14 @@ def ProcessarIO(fila_io: FilaIO, tempo: int) -> Processo | None:
             processo.tempo_io_restante -= 1
             # tempo total do processo diminui também, pois o tempo de E/S é contado no tempo total do processo
             processo.tempo_restante -= 1
-            print(f"Processo [P{processo.pid}] está realizando E/S do tipo {processo.io_atual.tipo.name} no intervalo [{tempo}, {tempo + 1}]. Tempo restante de E/S: {processo.tempo_io_restante}.")
+            Trace.Evento(
+                f"Processo [P{processo.pid}] está realizando E/S do tipo {processo.io_atual.tipo.name} no intervalo [{tempo}, {tempo + 1}]. Tempo restante de E/S: {processo.tempo_io_restante}.")
 
         # se o processo terminou de executar
         if processo.tempo_io_restante == 0:
             processo.status = Status.PRONTO
             fila_io.fila.get()  # remove o processo da fila de IO
-            print(
+            Trace.Evento(
                 f"Processo [P{processo.pid}] terminou a E/S do tipo {processo.io_atual.tipo.name} no tempo {tempo + 1}.")
 
         return processo
@@ -207,7 +221,7 @@ def GerenciarFilaPosIO(processo: Processo, lista_filas: list[FilaQuantum]) -> bo
             lista_filas[len(lista_filas) - 1].fila.put(processo)
             processo.status = Status.PRONTO
             processo.filaAtual = lista_filas[len(lista_filas) - 1]
-            print(
+            Trace.Evento(
                 f"Processo [P{processo.pid}] foi movido para a fila de prioridade {len(lista_filas) - 1} após E/S do tipo DISCO.")
             return True
 
@@ -216,7 +230,7 @@ def GerenciarFilaPosIO(processo: Processo, lista_filas: list[FilaQuantum]) -> bo
             lista_filas[0].fila.put(processo)
             processo.status = Status.PRONTO
             processo.filaAtual = lista_filas[0]
-            print(
+            Trace.Evento(
                 f"Processo [P{processo.pid}] foi movido para a fila de prioridade 0 após E/S do tipo FITA.")
             return True
 
@@ -225,7 +239,7 @@ def GerenciarFilaPosIO(processo: Processo, lista_filas: list[FilaQuantum]) -> bo
             lista_filas[0].fila.put(processo)
             processo.status = Status.PRONTO
             processo.filaAtual = lista_filas[0]
-            print(
+            Trace.Evento(
                 f"Processo [P{processo.pid}] foi movido para a fila de prioridade 0 após E/S do tipo IMPRESSORA.")
             return True
 

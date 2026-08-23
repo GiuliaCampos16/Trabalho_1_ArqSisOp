@@ -9,8 +9,11 @@ from processoModel import EventoIO, Processo, Prioridade, TipoIO
 from Simulador import SimuladorIOMultiFila
 from SimuladorTeste import SimuladorTeste
 from GeradorProcessos import GeradorProcessos
+from Relatorio import ImprimirTurnaround
+import Trace
 
 MAX_PROCESSOS = 10 ## poderia ser requisitado do usuario
+ARQUIVO_TRACE = "../visualizador/public/trace-mlfq.json"
 
 QUANTUM_ALTA = 2
 QUANTUM_MEDIA = 4
@@ -58,6 +61,8 @@ if __name__ == "__main__":
     gerador: GeradorProcessos           = GeradorProcessos(MAX_PROCESSOS, max_eventos_io=2, tempo_cpu_min=5, tempo_cpu_max=30, chegada_min=0, chegada_max=10)
     processosGerados : list[Processo]   = gerador.GerarProcessos() ## se não colocar nada ele pega um valor aleatorio de processos a serem criados
     finalizados: list[Processo]         = SimuladorIOMultiFila(processosGerados, filaQuantum_high, filaQuantum_low, fila_IO)
-    ## TODO: precisa ainda fazer o logs finais de turnaround, ja existe um metodo de calculo dos turnarounds na classe de Processo
+
+    ImprimirTurnaround(finalizados)
+    Trace.Salvar(ARQUIVO_TRACE)
 
     
