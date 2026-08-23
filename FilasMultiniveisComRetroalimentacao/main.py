@@ -1,4 +1,9 @@
 ## essas coisas vão ser definidas pelo usuario na entrada posteriormente
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "comum"))
+
 from FilaQuantum import FilaIO, FilaQuantum
 from processoModel import EventoIO, Processo, Prioridade, TipoIO
 from Simulador import SimuladorIOMultiFila
