@@ -18,6 +18,16 @@ def SimuladorSJFPreemptivo(lista_processos: list[Processo], fila_prontos: FilaPr
 
         ProcessarChegada(lista_processos, tempo, fila_prontos)
 
+        # a preempcao é checada depois das chegadas, que é quando pode aparecer
+        # alguém com menos CPU restante que o processo em execução
+        processoAtualCPU = ChecarPreempcao(processoAtualCPU, fila_prontos)
+
+        if processoAtualCPU is None:
+            processoAtualCPU = EscalonadorSJF(fila_prontos)
+
+        # a E/S vem depois do despacho, igual ao MLFQ: quem termina a E/S agora só
+        # volta a disputar a CPU no proximo tique. Se viesse antes, o processo
+        # gastaria uma u.t. de E/S e uma de CPU no mesmo instante
         processo: Processo | None = ProcessarIO(fila_IO, tempo)
         if processo is not None:
             if processo.status != Status.BLOQUEADO:
@@ -29,13 +39,6 @@ def SimuladorSJFPreemptivo(lista_processos: list[Processo], fila_prontos: FilaPr
                         f"Processo [P{processo.pid}] terminou de executar no tempo {tempo + 1}.")
                 else:
                     GerenciarFilaPosIO(processo, fila_prontos)
-
-        # a preempcao é checada depois das chegadas e dos retornos de E/S, que são os
-        # dois momentos em que pode aparecer alguém com menos CPU restante
-        processoAtualCPU = ChecarPreempcao(processoAtualCPU, fila_prontos)
-
-        if processoAtualCPU is None:
-            processoAtualCPU = EscalonadorSJF(fila_prontos)
 
         executouNaCPU: Processo = processoAtualCPU
 
@@ -54,7 +57,7 @@ def SimuladorSJFPreemptivo(lista_processos: list[Processo], fila_prontos: FilaPr
                     f"Processo [P{processoAtualCPU.pid}] foi movido para a fila de E/S.")
                 processoAtualCPU = None
 
-        Trace.FecharPasso(tempo, executouNaCPU, [fila_prontos], fila_IO)
+        Trace.FecharPasso(tempo, executouNaCPU, [fila_prontos], fila_IO, processo)
 
         tempo += 1
 

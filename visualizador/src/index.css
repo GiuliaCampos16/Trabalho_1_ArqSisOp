@@ -1,0 +1,36 @@
+@import "@fontsource/space-mono/400.css";
+@import "@fontsource/space-mono/700.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    --background: 40 20% 96%;
+    --foreground: 0 0% 12%;
+    --secondary: 40 15% 91%;
+    --muted: 40 15% 91%;
+    --muted-foreground: 0 0% 40%;
+    --border: 40 10% 84%;
+    --surface: 40 18% 94%;
+
+    --proc-1: 217 72% 48%;
+    --proc-2: 142 60% 38%;
+    --proc-3: 35 80% 46%;
+    --proc-4: 258 55% 52%;
+    --proc-5: 0 68% 48%;
+    --proc-6: 187 70% 38%;
+    --proc-7: 22 78% 48%;
+    --proc-8: 300 45% 48%;
+    --proc-9: 88 55% 36%;
+    --proc-10: 330 62% 50%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "liga" 0;
+  }
+}

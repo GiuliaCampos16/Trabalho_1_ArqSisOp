@@ -35,13 +35,14 @@ def Evento(mensagem: str):
     _eventos.append(mensagem.strip())
 
 
-def FecharPasso(tempo: int, processo_cpu, filas_prontos: list, fila_io):
+def FecharPasso(tempo: int, processo_cpu, filas_prontos: list, fila_io, processo_io=None):
     global _eventos
 
     _trace["passos"].append({
         "tempo": tempo,
         "eventos": [linha for linha in _eventos if linha != ""],
         "cpu": DescreverCPU(processo_cpu),
+        "io_ativo": processo_io.pid if processo_io is not None else None,
         "prontos": [[DescreverPronto(p) for p in ProcessosDaFila(f)] for f in filas_prontos],
         "io": [DescreverIO(p) for p in ProcessosDaFila(fila_io)]
     })

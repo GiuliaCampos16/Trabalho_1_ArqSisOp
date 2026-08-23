@@ -15,6 +15,19 @@ cd SJFPreemptivo
 python main.py
 ```
 
+Cada execução imprime a tabela de turnaround e grava um trace em
+`visualizador/public/`.
+
+## Visualizador
+
+[`visualizador/`](visualizador/) — player passo a passo em React + Tailwind. Mostra, a cada unidade de tempo, o processo na CPU, o estado de todas as filas, os eventos do intervalo e uma linha do tempo da CPU. Não implementa escalonamento: só lê o trace que o Python grava.
+
+```bash
+cd visualizador
+pnpm install
+pnpm dev
+```
+
 ## Validação
 
 Os dois algoritmos reproduzem exemplos resolvidos em aula:

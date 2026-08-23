@@ -70,7 +70,7 @@ def SimuladorIOMultiFila(lista_processos: list[Processo], fila_alta: FilaQuantum
             if preempted == True:
                 processoAtualCPU = None
 
-        Trace.FecharPasso(tempo, executouNaCPU, filas, fila_IO)
+        Trace.FecharPasso(tempo, executouNaCPU, filas, fila_IO, processo)
 
         tempo += 1
 
