@@ -15,6 +15,18 @@ class FilaQuantum:
         print("------------------------------")
 
 
+class FilaProntos:
+    def __init__(self):
+        self.fila: list[Processo] = []
+
+    def PrintFila(self):
+        print("Fila de Prontos:")
+        for processo in self.fila:
+            print(
+                f"Processo P{processo.pid} | Tempo Restante: {processo.tempo_restante} | CPU Restante: {processo.TempoCpuRestante()}")
+        print("------------------------------")
+
+
 class FilaIO:
     def __init__(self):
         self.fila: Queue[Processo] = Queue()
