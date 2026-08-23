@@ -1,2 +1,12 @@
 # Trabalho_1_ArqSisOp
-trabalho de arquitetura de sistema operacional
+
+Trabalho de arquitetura de sistema operacional
+
+## Algoritmos implementados
+
+- [`FilasMultiniveisComRetroalimentacao/`](FilasMultiniveisComRetroalimentacao/)
+
+```bash
+cd FilasMultiniveisComRetroalimentacao
+python main.py
+```
