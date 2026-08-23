@@ -10,7 +10,7 @@ from processoModel import EventoIO, Processo, Prioridade, TipoIO  # noqa: E402
 from Simulador import SimuladorIOMultiFila  # noqa: E402
 from SimuladorTeste import SimuladorTeste  # noqa: E402
 from GeradorProcessos import GeradorProcessos  # noqa: E402
-from Relatorio import ImprimirTurnaround  # noqa: E402
+from Relatorio import ImprimirGantt, ImprimirTurnaround  # noqa: E402
 
 MAX_PROCESSOS = 10
 PROCESSOS_PADRAO = 3
@@ -84,4 +84,5 @@ if __name__ == "__main__":
         processosGerados, [filaQuantum_high, filaQuantum_media, filaQuantum_low], fila_IO)
 
     ImprimirTurnaround(finalizados)
+    ImprimirGantt(Trace.Dados())
     Trace.Salvar(argumentos.trace)

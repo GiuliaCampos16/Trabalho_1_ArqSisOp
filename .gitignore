@@ -218,3 +218,21 @@ __marimo__/
 
 # Node / visualizador React
 node_modules/
+
+# LaTeX (artefatos de compilacao; main.pdf fica versionado por ser a entrega)
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.nav
+*.snm
+*.vrb

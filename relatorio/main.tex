@@ -201,12 +201,13 @@ aguarda a conclusão da operação solicitada. Durante esse período,
 outro processo pode utilizar a CPU.
 
 Este trabalho apresenta o desenvolvimento de um simulador de
-escalonamento de processos. A implementação foi construída
-progressivamente, inicialmente considerando somente a utilização da
-CPU e, posteriormente, adicionando preempção, diferentes níveis de
-prioridade, operações de entrada e saída, geração automática de
-processos e acompanhamento dos eventos ocorridos durante a
-simulação.
+escalonamento de processos. A implementação foi construída inicialmente considerando somente a utilização da CPU e, posteriormente, adicionando preempção, diferentes níveis de prioridade, operações de entrada e saída, geração automática de processos e acompanhamento dos eventos ocorridos durante a simulação.
+
+O simulador implementa dois algoritmos. O primeiro é o de filas
+multiníveis com retroalimentação, exigido pelo enunciado. O segundo é o
+SJF preemptivo, que decide de maneira oposta usando o tempo de execução
+de cada processo, informação que o primeiro não tem. Rodar os dois sobre os mesmos processos permite comparar as duas
+estratégias.
 
 
 % ============================================================
@@ -223,6 +224,10 @@ Entre os algoritmos considerados encontra-se obrigatoriamente o
 escalonamento por filas multiníveis com retroalimentação, também
 conhecido como \textit{Multilevel Feedback Queue} (MLFQ).
 
+Como segundo algoritmo foi implementado o SJF preemptivo, ou
+\textit{Shortest Remaining Time First} (SRTF), descrito na seção
+\ref{sec:segundo}.
+
 O simulador foi projetado de forma que seja possível acompanhar o
 estado dos processos e das diferentes filas ao longo de cada unidade
 de tempo da simulação.
@@ -231,11 +236,7 @@ Foram considerados como objetivos específicos:
 
 \begin{itemize}
 
-    \item representar os principais dados de um processo através de
-    uma estrutura equivalente ao PCB;
-
-    \item representar os estados assumidos por um processo durante
-    sua execução;
+    \item representar os principais dados e os estados assumidos por um processo durante sua execução;
 
     \item implementar filas de diferentes níveis de prioridade;
 
@@ -251,9 +252,18 @@ Foram considerados como objetivos específicos:
 
     \item registrar os eventos ocorridos durante a simulação;
 
-    \item calcular o tempo de turnaround de cada processo.
+    \item calcular o tempo de turnaround de cada processo;
+
+    \item implementar um segundo algoritmo de escalonamento e
+    compará-lo com o primeiro sobre os mesmos processos.
 
 \end{itemize}
+
+As seções 6 a 10 descrevem componentes compartilhados pelos dois
+algoritmos: o cálculo do turnaround, o tratamento das operações de
+entrada e saída, a geração automática de processos, o registro dos
+eventos e o fluxo geral da simulação. Apenas as seções 4, 5 e 11
+tratam de um algoritmo específico.
 
 
 % ============================================================
@@ -269,6 +279,21 @@ sistema.
 Essas premissas também permitiram simplificar determinados aspectos
 de um sistema operacional real, mantendo o foco nos conceitos de
 escalonamento apresentados durante a disciplina.
+
+\subsection{Limite de processos}
+
+O simulador adota um limite máximo de 10 processos por execução.
+
+A quantidade efetivamente criada é informada por argumento de linha de
+comando e, quando omitida, são gerados 3 processos.
+
+Esse limite evita que a saída passo a passo se torne extensa demais
+para acompanhamento, mantendo o simulador legível para fins didáticos.
+
+
+% ============================================================
+% 3.2
+% ============================================================
 
 \subsection{Unidade de tempo}
 
@@ -373,6 +398,33 @@ bloqueado aguardando a conclusão da respectiva operação.
 
 O tempo de E/S é controlado separadamente do tempo de CPU.
 
+Ao concluir a operação, a fila de prontos para a qual o processo
+retorna depende do dispositivo utilizado:
+
+\begin{table}[H]
+    \centering
+    \caption{Fila de retorno após cada tipo de operação}
+    \begin{tabular}{cc}
+        \toprule
+        \textbf{Dispositivo} &
+        \textbf{Fila de retorno} \\
+        \midrule
+        Disco       & Baixa prioridade \\
+        Fita        & Alta prioridade  \\
+        Impressora  & Alta prioridade  \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+O disco é rápido, então quem o usa se
+parece mais com um processo CPU-bound e volta para a fila baixa. Fita
+e impressora são lentas, típicas de processos I/O-bound, que ganham
+prioridade ao voltar.
+
+Existe uma única fila de entrada e saída, atendida um processo por
+vez. Dessa forma, um processo pode permanecer aguardando na fila do dispositivo antes de
+iniciar sua operação.
+
 
 % ============================================================
 % 4. DESENVOLVIMENTO
@@ -398,7 +450,7 @@ complexidade da simulação.
 O primeiro passo foi definir quais informações deveriam ser
 armazenadas para cada processo.
 
-Para representar o PCB de forma simplificada, foram armazenados
+Para representar de forma simplificada, foram armazenados
 dados como:
 
 \begin{itemize}
@@ -431,6 +483,14 @@ dados como:
 
 A partir desses dados foi criada a classe \texttt{Processo}, que
 centraliza o estado de cada processo durante toda a simulação.
+
+O campo de prioridade é mantido sempre coerente com a fila em que o
+processo se encontra. Sempre que ocorre um rebaixamento ou um retorno
+de entrada e saída, a prioridade registrada é atualizada.
+
+Como o simulador não modela a criação de processos por outros
+processos, todos são criados diretamente pelo sistema e recebem PPID
+igual a zero.
 
 
 % ============================================================
@@ -667,6 +727,11 @@ Os processos foram finalizados nos seguintes instantes:
 Os resultados foram iguais aos apresentados no exercício feito em
 sala, validando a lógica básica de chegada, seleção, quantum,
 preempção, rebaixamento e contagem do tempo global.
+
+O segundo algoritmo passa pela mesma conferência, contra o exemplo do
+material da disciplina, na seção \ref{sec:validacaosrtf}. A validação
+dele aparece mais adiante porque sua implementação vem depois, na
+seção \ref{sec:segundo}.
 
 \begin{figure}[H]
     \centering
@@ -1120,21 +1185,18 @@ não tenha atingido o estado \texttt{TERMINADO}.
 % ============================================================
 
 \section{Segundo Algoritmo de Escalonamento}
+\label{sec:segundo}
 
-O enunciado solicita a implementação de dois algoritmos de
-escalonamento, sendo um deles obrigatoriamente a estratégia de filas
-multiníveis com retroalimentação.
+O enunciado pede dois algoritmos, sendo um deles obrigatoriamente o
+de filas multiníveis com retroalimentação.
 
-Como segundo algoritmo foi implementado o SJF preemptivo, também
-conhecido como \textit{Shortest Remaining Time First} (SRTF).
+Como segundo algoritmo foi escolhido o SJF preemptivo, também chamado
+de \textit{Shortest Remaining Time First} (SRTF).
 
-A escolha foi motivada pelo contraste que esse algoritmo oferece em
-relação ao MLFQ. O SRTF necessita conhecer previamente o tempo de
-processamento de cada processo, enquanto o MLFQ decide apenas com base
-no consumo de quantum observado durante a execução.
-
-Dessa forma, o MLFQ pode ser entendido como uma aproximação do
-comportamento do SRTF sem exigir esse conhecimento antecipado.
+Os dois trabalham de maneira oposta. O SRTF precisa saber de antemão
+quanto tempo de CPU cada processo vai consumir. O MLFQ não sabe nada
+disso e descobre durante a execução, rebaixando quem gasta o quantum
+inteiro. No fim, os dois acabam favorecendo os processos curtos.
 
 
 % ============================================================
@@ -1143,31 +1205,26 @@ comportamento do SRTF sem exigir esse conhecimento antecipado.
 
 \subsection{Premissas específicas}
 
-O enunciado permite que o segundo algoritmo utilize uma única fila
-quando não possuir níveis de prioridade.
-
-Foram adotadas as seguintes premissas:
+O enunciado permite usar uma única fila quando o segundo algoritmo
+não tem níveis de prioridade. Foi o caso aqui:
 
 \begin{itemize}
 
-    \item existe uma única fila de prontos, sem níveis de prioridade;
+    \item uma única fila de prontos;
 
-    \item não existe quantum, de modo que a CPU é liberada apenas por
-    preempção, por solicitação de entrada e saída ou por término do
-    processo;
+    \item sem quantum: o processo só perde a CPU por preempção, ao
+    pedir E/S ou ao terminar;
 
-    \item o tipo de dispositivo utilizado não altera a fila de
-    retorno, já que existe apenas uma fila de prontos;
+    \item o tipo de dispositivo não muda a fila de retorno, porque só
+    existe uma fila;
 
-    \item o critério de escolha é o tempo de CPU restante.
+    \item a escolha é feita pelo tempo de CPU restante.
 
 \end{itemize}
 
-O gerador automático de processos, os dispositivos de entrada e saída
-e suas respectivas durações permanecem os mesmos utilizados no MLFQ.
-
-Essa decisão permite submeter os dois algoritmos exatamente aos mesmos
-processos e comparar seus resultados.
+O gerador de processos, os dispositivos e suas durações são os mesmos
+do MLFQ, para que os dois algoritmos possam ser comparados sobre os
+mesmos processos.
 
 
 % ============================================================
@@ -1176,24 +1233,19 @@ processos e comparar seus resultados.
 
 \subsection{Critério de seleção}
 
-Sempre que a CPU está livre, é escolhido o processo com o menor tempo
-de CPU restante dentre os que estão na fila de prontos.
+Com a CPU livre, é escolhido o processo com o menor tempo de CPU
+restante na fila de prontos.
 
 \begin{lstlisting}
 processo = min(fila_prontos.fila,
                key=lambda p: p.TempoCpuRestante())
 \end{lstlisting}
 
-O critério utiliza o tempo restante de CPU e não o tempo total
-restante do processo.
+O critério usa o tempo restante de CPU, não o tempo total. O tempo
+total inclui as E/S ainda pendentes, que são espera em dispositivo;
+somá-las seria comparar tempo de processador com tempo de espera.
 
-O tempo total inclui as operações de entrada e saída ainda pendentes,
-que representam espera em dispositivo e não utilização do processador.
-Incluí-las no critério faria o escalonador comparar grandezas
-diferentes.
-
-Em caso de empate permanece selecionado o processo que entrou antes na
-fila, mantendo a ordem de chegada como critério de desempate.
+Havendo empate, fica o processo que entrou antes na fila.
 
 
 % ============================================================
@@ -1202,12 +1254,11 @@ fila, mantendo a ordem de chegada como critério de desempate.
 
 \subsection{Preempção}
 
-A preempção é verificada logo após a admissão dos processos que chegam
-no instante atual, que é o momento em que pode surgir um processo com
-tempo de CPU restante menor que o do processo em execução.
+A preempção é checada logo depois das chegadas. É ali que pode
+aparecer um processo com tempo restante menor que o do processo em
+execução.
 
-A troca ocorre somente quando o tempo restante do candidato é
-estritamente menor:
+A troca só acontece se o tempo do candidato for estritamente menor:
 
 \[
 T_{restante}(candidato)
@@ -1215,9 +1266,9 @@ T_{restante}(candidato)
 T_{restante}(executando)
 \]
 
-A comparação estrita é necessária. Caso fosse utilizada uma comparação
-com igualdade, dois processos com o mesmo tempo restante alternariam a
-posse da CPU a cada unidade de tempo, sem progresso útil.
+A comparação precisa ser estrita. Com $\leq$, dois processos empatados
+ficariam trocando de lugar na CPU a cada unidade de tempo sem nenhum
+dos dois avançar.
 
 
 % ============================================================
@@ -1226,7 +1277,7 @@ posse da CPU a cada unidade de tempo, sem progresso útil.
 
 \subsection{Ordem de tratamento em cada unidade de tempo}
 
-A cada unidade de tempo o simulador executa as seguintes etapas:
+A cada unidade de tempo o simulador faz, nesta ordem:
 
 \begin{enumerate}
 
@@ -1242,24 +1293,21 @@ A cada unidade de tempo o simulador executa as seguintes etapas:
 
 \end{enumerate}
 
-O processamento da entrada e saída ocorre depois da seleção, assim
-como no MLFQ.
-
-Se ocorresse antes, um processo que concluísse sua operação de entrada
-e saída poderia receber a CPU no mesmo instante, contabilizando uma
-unidade de tempo de E/S e uma unidade de tempo de CPU simultaneamente.
+A E/S é tratada depois da seleção, igual ao MLFQ. Se viesse antes, um
+processo que acabasse a E/S poderia pegar a CPU no mesmo instante e
+gastar uma unidade de E/S e uma de CPU ao mesmo tempo.
 
 
 % ============================================================
 % 11.5
 % ============================================================
 
-\subsection{Validação do algoritmo SRTF}
+\subsection{Validação do Algoritmo SRTF}
+\label{sec:validacaosrtf}
 
-Assim como no MLFQ, a implementação foi validada com um exemplo
-resolvido no material da disciplina, sem operações de entrada e saída.
-
-Foram considerados os seguintes processos:
+Como no MLFQ, a implementação foi conferida contra um exemplo
+resolvido no material da disciplina, sem E/S. Os processos usados
+foram:
 
 \begin{table}[H]
     \centering
@@ -1297,8 +1345,8 @@ A sequência produzida pelo simulador foi:
     \end{tabular}
 \end{table}
 
-Observa-se a preempção de P1 no instante 1, quando P2 chega ao sistema
-com tempo de CPU restante menor.
+P1 é preemptado no instante 1, quando P2 chega com tempo de CPU
+restante menor.
 
 Os processos foram finalizados nos seguintes instantes:
 
@@ -1344,9 +1392,8 @@ Portanto, o turnaround médio é:
 13
 \]
 
-Os valores obtidos coincidem com os apresentados no material da
-disciplina, validando o critério de seleção e a preempção
-implementados.
+Os valores batem com os do material, confirmando o critério de
+seleção e a preempção.
 
 \Figura{validacao_sjf.png}
       {Saída do simulador para o exemplo de validação do SRTF.}
@@ -1359,12 +1406,9 @@ implementados.
 
 \subsection{Comparação entre os dois algoritmos}
 
-Os dois algoritmos foram executados sobre os mesmos conjuntos de
-processos gerados automaticamente.
-
-Foram utilizados dois perfis de carga: um com processos curtos e mais
-operações de entrada e saída, e outro com processos longos e poucas
-operações de entrada e saída.
+Os dois algoritmos foram executados sobre os mesmos processos, em
+dois perfis de carga: um com processos curtos e mais E/S, outro com
+processos longos e pouca E/S.
 
 \begin{table}[H]
     \centering
@@ -1375,28 +1419,23 @@ operações de entrada e saída.
         \textbf{MLFQ} &
         \textbf{SRTF} \\
         \midrule
-        Turnaround médio (E/S intensa)   & 44,5  & 36,3 \\
-        Turnaround médio (E/S reduzida)  & 110,9 & 75,1 \\
-        Tempo de resposta (E/S intensa)  & 1,8   & 6,7  \\
-        Tempo de resposta (E/S reduzida) & 2,1   & 27,0 \\
+        Turnaround médio (E/S intensa)   & 43,7  & 36,3 \\
+        Turnaround médio (E/S reduzida)  & 111,5 & 75,1 \\
+        Tempo de resposta (E/S intensa)  & 1,6   & 6,7  \\
+        Tempo de resposta (E/S reduzida) & 1,8   & 27,0 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-O SRTF apresenta turnaround médio menor nos dois perfis, pois atende
-primeiro os processos que terminam antes.
+O SRTF ganha no turnaround nos dois perfis, porque atende primeiro
+quem termina antes. O MLFQ ganha no tempo de resposta, porque todo
+processo novo entra na fila de maior prioridade e pega a CPU quase na
+hora.
 
-O MLFQ, por outro lado, apresenta tempo de resposta muito menor, já
-que todo processo novo entra na fila de maior prioridade e recebe a
-CPU quase imediatamente.
-
-Essa diferença evidencia o compromisso existente entre as duas
-estratégias. O SRTF favorece a vazão do sistema, enquanto o MLFQ
-favorece a interatividade.
-
-Cabe observar ainda que o SRTF permite a ocorrência de
-\textit{starvation}: um processo longo pode ser adiado indefinidamente
-enquanto processos curtos continuarem chegando.
+O preço do SRTF é starvation: um processo longo pode ficar esperando
+para sempre se processos curtos continuarem chegando. No MLFQ isso não
+acontece, porque mesmo o processo da fila mais baixa é atendido quando
+as de cima esvaziam.
 
 \Figura{gantt_mlfq.png}
       {Gráfico de Gantt da execução com o MLFQ.}
@@ -1436,9 +1475,6 @@ enquanto processos curtos continuarem chegando.
       {Tabela de turnaround impressa ao final da simulação.}
       {fig:turnaround_final}
 
-\Figura{visualizador.png}
-      {Visualizador do simulador, com o gráfico de Gantt e o estado das filas.}
-      {fig:visualizador}
 %
 % Exemplo de figura:
 %
@@ -1494,6 +1530,20 @@ durante esses períodos.
 A criação de um gerador automático tornou possível produzir cenários
 diferentes de execução, variando tempos de chegada, tempos de CPU,
 quantidade de eventos de entrada e saída e dispositivos utilizados.
+
+O segundo algoritmo permitiu comparar duas estratégias sobre os
+mesmos processos. O SJF preemptivo teve o menor turnaround médio nos
+dois perfis testados. O MLFQ teve tempo de resposta bem menor, entre
+quatro e quinze vezes conforme a carga.
+
+Cada um serve a um objetivo diferente: o SRTF termina mais processos
+em menos tempo, o MLFQ dá CPU rápido a quem acabou de chegar e não
+deixa nenhum processo esperando para sempre.
+
+O SRTF ainda depende de uma informação que um sistema operacional real
+quase nunca tem: quanto tempo cada processo vai executar. O MLFQ chega
+perto do mesmo resultado sem saber disso, apenas rebaixando quem gasta
+o quantum inteiro.
 
 Por fim, os registros produzidos a cada unidade de tempo tornam a
 execução do simulador observável e facilitam a compreensão das

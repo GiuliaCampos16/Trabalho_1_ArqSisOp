@@ -9,7 +9,7 @@ from FilaQuantum import FilaIO, FilaProntos  # noqa: E402
 from processoModel import Processo  # noqa: E402
 from Simulador import SimuladorSJFPreemptivo  # noqa: E402
 from GeradorProcessos import GeradorProcessos  # noqa: E402
-from Relatorio import ImprimirTurnaround  # noqa: E402
+from Relatorio import ImprimirGantt, ImprimirTurnaround  # noqa: E402
 
 MAX_PROCESSOS = 10
 PROCESSOS_PADRAO = 3
@@ -58,4 +58,5 @@ if __name__ == "__main__":
         processosGerados, fila_prontos, fila_IO)
 
     ImprimirTurnaround(finalizados)
+    ImprimirGantt(Trace.Dados())
     Trace.Salvar(argumentos.trace)
