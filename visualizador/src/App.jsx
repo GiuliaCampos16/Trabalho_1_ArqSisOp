@@ -13,14 +13,16 @@ const TRACES = [
   { id: 'sjf', curto: 'SJF', pasta: 'SJFPreemptivo', arquivo: 'trace-sjf.json' },
 ]
 
-const VELOCIDADE = 320
-
 export default function App() {
   const [escolhido, setEscolhido] = useState(TRACES[0])
   const [trace, setTrace] = useState(null)
   const [erro, setErro] = useState(false)
   const [indice, setIndice] = useState(0)
   const [tocando, setTocando] = useState(false)
+  const [velocidade, setVelocidade] = useState(500)
+  const [verReferencia, setVerReferencia] = useState(false)
+
+  const ultimo = trace ? trace.passos.length - 1 : 0
 
   useEffect(() => {
     setTrace(null)
@@ -39,22 +41,50 @@ export default function App() {
 
     const timer = setInterval(() => {
       setIndice((atual) => {
-        if (atual >= trace.passos.length - 1) {
+        if (atual >= ultimo) {
           setTocando(false)
           return atual
         }
         return atual + 1
       })
-    }, VELOCIDADE)
+    }, velocidade)
 
     return () => clearInterval(timer)
-  }, [tocando, trace])
+  }, [tocando, trace, velocidade, ultimo])
+
+  // navegar manualmente sempre pausa a execução automática
+  function irPara(n) {
+    setTocando(false)
+    setIndice(Math.max(0, Math.min(ultimo, n)))
+  }
+
+  function alternarPlay() {
+    if (!tocando && indice >= ultimo) setIndice(0)
+    setTocando(!tocando)
+  }
+
+  useEffect(() => {
+    if (trace === null) return
+
+    function aoTeclar(e) {
+      if (e.target.tagName === 'INPUT') return
+
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); irPara(indice + 1) }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); irPara(indice - 1) }
+      else if (e.key === ' ') { e.preventDefault(); alternarPlay() }
+      else if (e.key === 'Home') { e.preventDefault(); irPara(0) }
+      else if (e.key === 'End') { e.preventDefault(); irPara(ultimo) }
+    }
+
+    addEventListener('keydown', aoTeclar)
+    return () => removeEventListener('keydown', aoTeclar)
+  })
 
   const passo = trace ? trace.passos[indice] : null
 
   return (
     <div className="min-h-screen bg-background font-mono text-foreground">
-      <div className="mx-auto max-w-5xl space-y-8 px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-6xl space-y-7 px-4 py-8 sm:px-6">
 
         <header className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-4">
           <div>
@@ -63,7 +93,7 @@ export default function App() {
             </h1>
             <p className={`${UI.meta} mt-1`}>
               Arquitetura de Sistemas Operacionais — UERJ
-              {trace && ` · ${trace.algoritmo} · ${trace.passos.length} u.t.`}
+              {trace && ` · ${trace.algoritmo} · ${ultimo + 1} u.t.`}
             </p>
           </div>
 
@@ -96,32 +126,45 @@ export default function App() {
 
         {trace !== null && (
           <>
-            <Secao titulo="Gráfico de Gantt" meta={`t = ${passo.tempo}`}>
+            <Secao titulo="Gráfico de Gantt" meta={`t = ${passo.tempo} de ${ultimo}`}>
               <Controles
                 indice={indice}
-                total={trace.passos.length}
+                ultimo={ultimo}
                 tocando={tocando}
-                setIndice={setIndice}
-                setTocando={setTocando}
+                velocidade={velocidade}
+                irPara={irPara}
+                alternarPlay={alternarPlay}
+                setVelocidade={setVelocidade}
               />
-              <Gantt trace={trace} indice={indice} setIndice={setIndice} />
+              <Gantt trace={trace} indice={indice} setIndice={irPara} />
             </Secao>
 
-            <Secao titulo={`Estado em t = ${passo.tempo}`}>
-              <Estado rotulos={trace.filas} passo={passo} />
-            </Secao>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <Secao titulo={`Estado em t = ${passo.tempo}`}>
+                <Estado rotulos={trace.filas} passo={passo} />
+              </Secao>
 
-            <Secao titulo={`Eventos no intervalo [${passo.tempo}, ${passo.tempo + 1}]`}>
-              <Eventos eventos={passo.eventos} />
-            </Secao>
+              <Secao titulo={`Eventos no intervalo [${passo.tempo}, ${passo.tempo + 1}]`}>
+                <Eventos eventos={passo.eventos} />
+              </Secao>
+            </div>
 
-            <Secao titulo="Processos criados">
-              <Processos processos={trace.processos} />
-            </Secao>
+            <div className="border-t border-border pt-4">
+              <button className={UI.botao} onClick={() => setVerReferencia((v) => !v)}>
+                {verReferencia ? 'Ocultar' : 'Mostrar'} processos e turnaround
+              </button>
 
-            <Secao titulo="Turnaround">
-              <Turnaround resultado={trace.resultado} />
-            </Secao>
+              {verReferencia && (
+                <div className="mt-6 grid gap-6 lg:grid-cols-2">
+                  <Secao titulo="Processos criados">
+                    <Processos processos={trace.processos} />
+                  </Secao>
+                  <Secao titulo="Turnaround">
+                    <Turnaround resultado={trace.resultado} />
+                  </Secao>
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>

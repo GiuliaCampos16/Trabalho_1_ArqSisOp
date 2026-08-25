@@ -38,13 +38,19 @@ def Evento(mensagem: str):
 def FecharPasso(tempo: int, processo_cpu, filas_prontos: list, fila_io, processo_io=None):
     global _eventos
 
+    # o passo descreve o intervalo [tempo, tempo+1]: quem ocupou a CPU ou o
+    # dispositivo de E/S nesse intervalo nao estava em nenhuma fila de espera,
+    # mesmo que ja tenha entrado em uma delas no fim do intervalo
+    ocupados = {p.pid for p in (processo_cpu, processo_io) if p is not None}
+
     _trace["passos"].append({
         "tempo": tempo,
         "eventos": [linha for linha in _eventos if linha != ""],
         "cpu": DescreverCPU(processo_cpu),
         "io_ativo": processo_io.pid if processo_io is not None else None,
-        "prontos": [[DescreverPronto(p) for p in ProcessosDaFila(f)] for f in filas_prontos],
-        "io": [DescreverIO(p) for p in ProcessosDaFila(fila_io)]
+        "prontos": [[DescreverPronto(p) for p in ProcessosDaFila(f) if p.pid not in ocupados]
+                    for f in filas_prontos],
+        "io": [DescreverIO(p) for p in ProcessosDaFila(fila_io) if p.pid not in ocupados]
     })
     _eventos = []
 

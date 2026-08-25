@@ -12,10 +12,12 @@ function Marca({ pid, sufixo }) {
 
 function Linha({ rotulo, itens, vazio, marca }) {
   return (
-    <div className="flex items-start gap-3 border-b border-border/40 py-1.5">
-      <span className={`${UI.microRotulo} w-40 shrink-0 pt-0.5`}>{rotulo}</span>
+    <div className="grid grid-cols-[10rem_1fr] items-start gap-3 border-b border-border/40 py-2">
+      <span className={`${UI.microRotulo} pt-1.5`}>{rotulo}</span>
       <div className="flex flex-wrap gap-1.5">
-        {itens.length === 0 ? <span className={UI.meta}>{vazio}</span> : itens.map(marca)}
+        {itens.length === 0
+          ? <span className={`${UI.meta} pt-1.5`}>{vazio}</span>
+          : itens.map(marca)}
       </div>
     </div>
   )

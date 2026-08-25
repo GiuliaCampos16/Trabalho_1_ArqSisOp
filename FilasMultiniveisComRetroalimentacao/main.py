@@ -14,6 +14,8 @@ from Relatorio import ImprimirGantt, ImprimirTurnaround  # noqa: E402
 
 MAX_PROCESSOS = 10
 PROCESSOS_PADRAO = 3
+# semente do exemplo usado no relatorio, mantem a simulacao reproduzivel
+SEMENTE_PADRAO = 345
 ARQUIVO_TRACE = "../visualizador/public/trace-mlfq.json"
 
 QUANTUM_ALTA = 2
@@ -60,8 +62,8 @@ def LerArgumentos():
         description="Simulador de escalonamento por filas multiniveis com retroalimentacao")
     parser.add_argument("-p", "--processos", type=int, default=PROCESSOS_PADRAO,
                         help=f"quantidade de processos a gerar (padrao: {PROCESSOS_PADRAO}, maximo: {MAX_PROCESSOS})")
-    parser.add_argument("-s", "--seed", type=int, default=None,
-                        help="semente aleatoria, para repetir exatamente a mesma simulacao")
+    parser.add_argument("-s", "--seed", type=int, default=SEMENTE_PADRAO,
+                        help=f"semente aleatoria, para repetir exatamente a mesma simulacao (padrao: {SEMENTE_PADRAO})")
     parser.add_argument("-t", "--trace", default=ARQUIVO_TRACE,
                         help="arquivo onde gravar o trace JSON")
     return parser.parse_args()

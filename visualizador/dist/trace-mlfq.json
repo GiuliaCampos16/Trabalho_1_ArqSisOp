@@ -8,16 +8,11 @@
   "processos": [
     {
       "pid": 1,
-      "chegada": 5,
-      "tempo_cpu": 9,
+      "chegada": 4,
+      "tempo_cpu": 5,
       "eventos_io": [
         {
-          "disparo": 1,
-          "tipo": "IMPRESSORA",
-          "duracao": 10
-        },
-        {
-          "disparo": 8,
+          "disparo": 4,
           "tipo": "DISCO",
           "duracao": 3
         }
@@ -25,30 +20,25 @@
     },
     {
       "pid": 2,
-      "chegada": 5,
-      "tempo_cpu": 23,
+      "chegada": 3,
+      "tempo_cpu": 16,
       "eventos_io": [
         {
-          "disparo": 17,
-          "tipo": "DISCO",
-          "duracao": 3
+          "disparo": 5,
+          "tipo": "FITA",
+          "duracao": 7
         }
       ]
     },
     {
       "pid": 3,
-      "chegada": 0,
-      "tempo_cpu": 7,
+      "chegada": 10,
+      "tempo_cpu": 14,
       "eventos_io": [
         {
-          "disparo": 1,
-          "tipo": "DISCO",
-          "duracao": 3
-        },
-        {
-          "disparo": 4,
-          "tipo": "DISCO",
-          "duracao": 3
+          "disparo": 11,
+          "tipo": "FITA",
+          "duracao": 7
         }
       ]
     }
@@ -56,16 +46,50 @@
   "passos": [
     {
       "tempo": 0,
+      "eventos": [],
+      "cpu": null,
+      "io_ativo": null,
+      "prontos": [
+        [],
+        [],
+        []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 1,
+      "eventos": [],
+      "cpu": null,
+      "io_ativo": null,
+      "prontos": [
+        [],
+        [],
+        []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 2,
+      "eventos": [],
+      "cpu": null,
+      "io_ativo": null,
+      "prontos": [
+        [],
+        [],
+        []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 3,
       "eventos": [
-        "Processo [P3] Inicializou na fila de alta prioridade no tempo 0.",
-        "Processo [P3] foi selecionado da fila de prioridade 0 com quantum 2.",
-        "Processo [P3] está executando no intervalo [0, 1]. CPU restante: 6. Tempo restante (CPU+E/S): 12. Quantum restante: 1.",
-        "Processo [P3] solicitou E/S do tipo DISCO no tempo 1.",
-        "Processo [P3] foi movido para a fila de E/S."
+        "Processo [P2] Inicializou na fila de alta prioridade no tempo 3.",
+        "Processo [P2] foi selecionado da fila de prioridade 0 com quantum 2.",
+        "Processo [P2] está executando no intervalo [3, 4]. CPU restante: 15. Tempo restante (CPU+E/S): 22. Quantum restante: 1."
       ],
       "cpu": {
-        "pid": 3,
-        "cpu_restante": 6,
+        "pid": 2,
+        "cpu_restante": 15,
         "quantum_restante": 1
       },
       "io_ativo": null,
@@ -74,89 +98,28 @@
         [],
         []
       ],
-      "io": [
-        {
-          "pid": 3,
-          "tipo": "DISCO",
-          "restante": 3
-        }
-      ]
-    },
-    {
-      "tempo": 1,
-      "eventos": [
-        "Processo [P3] está realizando E/S do tipo DISCO no intervalo [1, 2]. Tempo restante de E/S: 2."
-      ],
-      "cpu": null,
-      "io_ativo": 3,
-      "prontos": [
-        [],
-        [],
-        []
-      ],
-      "io": [
-        {
-          "pid": 3,
-          "tipo": "DISCO",
-          "restante": 2
-        }
-      ]
-    },
-    {
-      "tempo": 2,
-      "eventos": [
-        "Processo [P3] está realizando E/S do tipo DISCO no intervalo [2, 3]. Tempo restante de E/S: 1."
-      ],
-      "cpu": null,
-      "io_ativo": 3,
-      "prontos": [
-        [],
-        [],
-        []
-      ],
-      "io": [
-        {
-          "pid": 3,
-          "tipo": "DISCO",
-          "restante": 1
-        }
-      ]
-    },
-    {
-      "tempo": 3,
-      "eventos": [
-        "Processo [P3] está realizando E/S do tipo DISCO no intervalo [3, 4]. Tempo restante de E/S: 0.",
-        "Processo [P3] terminou a E/S do tipo DISCO no tempo 4.",
-        "Processo [P3] foi movido para a fila de prioridade 2 após E/S do tipo DISCO."
-      ],
-      "cpu": null,
-      "io_ativo": 3,
-      "prontos": [
-        [],
-        [],
-        [
-          {
-            "pid": 3,
-            "cpu_restante": 6
-          }
-        ]
-      ],
       "io": []
     },
     {
       "tempo": 4,
       "eventos": [
-        "Processo [P3] foi selecionado da fila de prioridade 2 com quantum 6.",
-        "Processo [P3] está executando no intervalo [4, 5]. CPU restante: 5. Tempo restante (CPU+E/S): 8. Quantum restante: 5."
+        "Processo [P1] Inicializou na fila de alta prioridade no tempo 4.",
+        "Processo [P2] está executando no intervalo [4, 5]. CPU restante: 14. Tempo restante (CPU+E/S): 21. Quantum restante: 0.",
+        "Processo [P2] foi movido para a fila de prioridade 1."
       ],
       "cpu": {
-        "pid": 3,
-        "cpu_restante": 5,
-        "quantum_restante": 5
+        "pid": 2,
+        "cpu_restante": 14,
+        "quantum_restante": 0
       },
       "io_ativo": null,
       "prontos": [
-        [],
+        [
+          {
+            "pid": 1,
+            "cpu_restante": 5
+          }
+        ],
         [],
         []
       ],
@@ -165,28 +128,23 @@
     {
       "tempo": 5,
       "eventos": [
-        "Processo [P1] Inicializou na fila de alta prioridade no tempo 5.",
-        "Processo [P2] Inicializou na fila de alta prioridade no tempo 5.",
-        "Processo [P3] está executando no intervalo [5, 6]. CPU restante: 4. Tempo restante (CPU+E/S): 7. Quantum restante: 4."
+        "Processo [P1] foi selecionado da fila de prioridade 0 com quantum 2.",
+        "Processo [P1] está executando no intervalo [5, 6]. CPU restante: 4. Tempo restante (CPU+E/S): 7. Quantum restante: 1."
       ],
       "cpu": {
-        "pid": 3,
+        "pid": 1,
         "cpu_restante": 4,
-        "quantum_restante": 4
+        "quantum_restante": 1
       },
       "io_ativo": null,
       "prontos": [
+        [],
         [
           {
-            "pid": 1,
-            "cpu_restante": 9
-          },
-          {
             "pid": 2,
-            "cpu_restante": 23
+            "cpu_restante": 14
           }
         ],
-        [],
         []
       ],
       "io": []
@@ -194,359 +152,275 @@
     {
       "tempo": 6,
       "eventos": [
-        "Processo [P3] está executando no intervalo [6, 7]. CPU restante: 3. Tempo restante (CPU+E/S): 6. Quantum restante: 3.",
-        "Processo [P3] solicitou E/S do tipo DISCO no tempo 7.",
-        "Processo [P3] foi movido para a fila de E/S."
+        "Processo [P1] está executando no intervalo [6, 7]. CPU restante: 3. Tempo restante (CPU+E/S): 6. Quantum restante: 0.",
+        "Processo [P1] foi movido para a fila de prioridade 1."
       ],
       "cpu": {
-        "pid": 3,
+        "pid": 1,
         "cpu_restante": 3,
+        "quantum_restante": 0
+      },
+      "io_ativo": null,
+      "prontos": [
+        [],
+        [
+          {
+            "pid": 2,
+            "cpu_restante": 14
+          }
+        ],
+        []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 7,
+      "eventos": [
+        "Processo [P2] foi selecionado da fila de prioridade 1 com quantum 4.",
+        "Processo [P2] está executando no intervalo [7, 8]. CPU restante: 13. Tempo restante (CPU+E/S): 20. Quantum restante: 3."
+      ],
+      "cpu": {
+        "pid": 2,
+        "cpu_restante": 13,
         "quantum_restante": 3
       },
       "io_ativo": null,
       "prontos": [
+        [],
         [
           {
             "pid": 1,
-            "cpu_restante": 9
-          },
-          {
-            "pid": 2,
-            "cpu_restante": 23
+            "cpu_restante": 3
           }
         ],
+        []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 8,
+      "eventos": [
+        "Processo [P2] está executando no intervalo [8, 9]. CPU restante: 12. Tempo restante (CPU+E/S): 19. Quantum restante: 2."
+      ],
+      "cpu": {
+        "pid": 2,
+        "cpu_restante": 12,
+        "quantum_restante": 2
+      },
+      "io_ativo": null,
+      "prontos": [
+        [],
+        [
+          {
+            "pid": 1,
+            "cpu_restante": 3
+          }
+        ],
+        []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 9,
+      "eventos": [
+        "Processo [P2] está executando no intervalo [9, 10]. CPU restante: 11. Tempo restante (CPU+E/S): 18. Quantum restante: 1.",
+        "Processo [P2] solicitou E/S do tipo FITA no tempo 10.",
+        "Processo [P2] foi movido para a fila de E/S."
+      ],
+      "cpu": {
+        "pid": 2,
+        "cpu_restante": 11,
+        "quantum_restante": 1
+      },
+      "io_ativo": null,
+      "prontos": [
+        [],
+        [
+          {
+            "pid": 1,
+            "cpu_restante": 3
+          }
+        ],
+        []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 10,
+      "eventos": [
+        "Processo [P3] Inicializou na fila de alta prioridade no tempo 10.",
+        "Processo [P3] foi selecionado da fila de prioridade 0 com quantum 2.",
+        "Processo [P2] está realizando E/S do tipo FITA no intervalo [10, 11]. Tempo restante de E/S: 6.",
+        "Processo [P3] está executando no intervalo [10, 11]. CPU restante: 13. Tempo restante (CPU+E/S): 20. Quantum restante: 1."
+      ],
+      "cpu": {
+        "pid": 3,
+        "cpu_restante": 13,
+        "quantum_restante": 1
+      },
+      "io_ativo": 2,
+      "prontos": [
+        [],
+        [
+          {
+            "pid": 1,
+            "cpu_restante": 3
+          }
+        ],
+        []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 11,
+      "eventos": [
+        "Processo [P2] está realizando E/S do tipo FITA no intervalo [11, 12]. Tempo restante de E/S: 5.",
+        "Processo [P3] está executando no intervalo [11, 12]. CPU restante: 12. Tempo restante (CPU+E/S): 19. Quantum restante: 0.",
+        "Processo [P3] foi movido para a fila de prioridade 1."
+      ],
+      "cpu": {
+        "pid": 3,
+        "cpu_restante": 12,
+        "quantum_restante": 0
+      },
+      "io_ativo": 2,
+      "prontos": [
+        [],
+        [
+          {
+            "pid": 1,
+            "cpu_restante": 3
+          }
+        ],
+        []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 12,
+      "eventos": [
+        "Processo [P1] foi selecionado da fila de prioridade 1 com quantum 4.",
+        "Processo [P2] está realizando E/S do tipo FITA no intervalo [12, 13]. Tempo restante de E/S: 4.",
+        "Processo [P1] está executando no intervalo [12, 13]. CPU restante: 2. Tempo restante (CPU+E/S): 5. Quantum restante: 3."
+      ],
+      "cpu": {
+        "pid": 1,
+        "cpu_restante": 2,
+        "quantum_restante": 3
+      },
+      "io_ativo": 2,
+      "prontos": [
+        [],
+        [
+          {
+            "pid": 3,
+            "cpu_restante": 12
+          }
+        ],
+        []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 13,
+      "eventos": [
+        "Processo [P2] está realizando E/S do tipo FITA no intervalo [13, 14]. Tempo restante de E/S: 3.",
+        "Processo [P1] está executando no intervalo [13, 14]. CPU restante: 1. Tempo restante (CPU+E/S): 4. Quantum restante: 2.",
+        "Processo [P1] solicitou E/S do tipo DISCO no tempo 14.",
+        "Processo [P1] foi movido para a fila de E/S."
+      ],
+      "cpu": {
+        "pid": 1,
+        "cpu_restante": 1,
+        "quantum_restante": 2
+      },
+      "io_ativo": 2,
+      "prontos": [
+        [],
+        [
+          {
+            "pid": 3,
+            "cpu_restante": 12
+          }
+        ],
+        []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 14,
+      "eventos": [
+        "Processo [P3] foi selecionado da fila de prioridade 1 com quantum 4.",
+        "Processo [P2] está realizando E/S do tipo FITA no intervalo [14, 15]. Tempo restante de E/S: 2.",
+        "Processo [P3] está executando no intervalo [14, 15]. CPU restante: 11. Tempo restante (CPU+E/S): 18. Quantum restante: 3."
+      ],
+      "cpu": {
+        "pid": 3,
+        "cpu_restante": 11,
+        "quantum_restante": 3
+      },
+      "io_ativo": 2,
+      "prontos": [
+        [],
         [],
         []
       ],
       "io": [
         {
-          "pid": 3,
+          "pid": 1,
           "tipo": "DISCO",
           "restante": 3
         }
       ]
     },
     {
-      "tempo": 7,
-      "eventos": [
-        "Processo [P1] foi selecionado da fila de prioridade 0 com quantum 2.",
-        "Processo [P3] está realizando E/S do tipo DISCO no intervalo [7, 8]. Tempo restante de E/S: 2.",
-        "Processo [P1] está executando no intervalo [7, 8]. CPU restante: 8. Tempo restante (CPU+E/S): 21. Quantum restante: 1.",
-        "Processo [P1] solicitou E/S do tipo IMPRESSORA no tempo 8.",
-        "Processo [P1] foi movido para a fila de E/S."
-      ],
-      "cpu": {
-        "pid": 1,
-        "cpu_restante": 8,
-        "quantum_restante": 1
-      },
-      "io_ativo": 3,
-      "prontos": [
-        [
-          {
-            "pid": 2,
-            "cpu_restante": 23
-          }
-        ],
-        [],
-        []
-      ],
-      "io": [
-        {
-          "pid": 3,
-          "tipo": "DISCO",
-          "restante": 2
-        },
-        {
-          "pid": 1,
-          "tipo": "IMPRESSORA",
-          "restante": 10
-        }
-      ]
-    },
-    {
-      "tempo": 8,
-      "eventos": [
-        "Processo [P2] foi selecionado da fila de prioridade 0 com quantum 2.",
-        "Processo [P3] está realizando E/S do tipo DISCO no intervalo [8, 9]. Tempo restante de E/S: 1.",
-        "Processo [P2] está executando no intervalo [8, 9]. CPU restante: 22. Tempo restante (CPU+E/S): 25. Quantum restante: 1."
-      ],
-      "cpu": {
-        "pid": 2,
-        "cpu_restante": 22,
-        "quantum_restante": 1
-      },
-      "io_ativo": 3,
-      "prontos": [
-        [],
-        [],
-        []
-      ],
-      "io": [
-        {
-          "pid": 3,
-          "tipo": "DISCO",
-          "restante": 1
-        },
-        {
-          "pid": 1,
-          "tipo": "IMPRESSORA",
-          "restante": 10
-        }
-      ]
-    },
-    {
-      "tempo": 9,
-      "eventos": [
-        "Processo [P3] está realizando E/S do tipo DISCO no intervalo [9, 10]. Tempo restante de E/S: 0.",
-        "Processo [P3] terminou a E/S do tipo DISCO no tempo 10.",
-        "Processo [P3] foi movido para a fila de prioridade 2 após E/S do tipo DISCO.",
-        "Processo [P2] está executando no intervalo [9, 10]. CPU restante: 21. Tempo restante (CPU+E/S): 24. Quantum restante: 0.",
-        "Processo [P2] foi movido para a fila de prioridade 1."
-      ],
-      "cpu": {
-        "pid": 2,
-        "cpu_restante": 21,
-        "quantum_restante": 0
-      },
-      "io_ativo": 3,
-      "prontos": [
-        [],
-        [
-          {
-            "pid": 2,
-            "cpu_restante": 21
-          }
-        ],
-        [
-          {
-            "pid": 3,
-            "cpu_restante": 3
-          }
-        ]
-      ],
-      "io": [
-        {
-          "pid": 1,
-          "tipo": "IMPRESSORA",
-          "restante": 10
-        }
-      ]
-    },
-    {
-      "tempo": 10,
-      "eventos": [
-        "Processo [P2] foi selecionado da fila de prioridade 1 com quantum 4.",
-        "Processo [P1] está realizando E/S do tipo IMPRESSORA no intervalo [10, 11]. Tempo restante de E/S: 9.",
-        "Processo [P2] está executando no intervalo [10, 11]. CPU restante: 20. Tempo restante (CPU+E/S): 23. Quantum restante: 3."
-      ],
-      "cpu": {
-        "pid": 2,
-        "cpu_restante": 20,
-        "quantum_restante": 3
-      },
-      "io_ativo": 1,
-      "prontos": [
-        [],
-        [],
-        [
-          {
-            "pid": 3,
-            "cpu_restante": 3
-          }
-        ]
-      ],
-      "io": [
-        {
-          "pid": 1,
-          "tipo": "IMPRESSORA",
-          "restante": 9
-        }
-      ]
-    },
-    {
-      "tempo": 11,
-      "eventos": [
-        "Processo [P1] está realizando E/S do tipo IMPRESSORA no intervalo [11, 12]. Tempo restante de E/S: 8.",
-        "Processo [P2] está executando no intervalo [11, 12]. CPU restante: 19. Tempo restante (CPU+E/S): 22. Quantum restante: 2."
-      ],
-      "cpu": {
-        "pid": 2,
-        "cpu_restante": 19,
-        "quantum_restante": 2
-      },
-      "io_ativo": 1,
-      "prontos": [
-        [],
-        [],
-        [
-          {
-            "pid": 3,
-            "cpu_restante": 3
-          }
-        ]
-      ],
-      "io": [
-        {
-          "pid": 1,
-          "tipo": "IMPRESSORA",
-          "restante": 8
-        }
-      ]
-    },
-    {
-      "tempo": 12,
-      "eventos": [
-        "Processo [P1] está realizando E/S do tipo IMPRESSORA no intervalo [12, 13]. Tempo restante de E/S: 7.",
-        "Processo [P2] está executando no intervalo [12, 13]. CPU restante: 18. Tempo restante (CPU+E/S): 21. Quantum restante: 1."
-      ],
-      "cpu": {
-        "pid": 2,
-        "cpu_restante": 18,
-        "quantum_restante": 1
-      },
-      "io_ativo": 1,
-      "prontos": [
-        [],
-        [],
-        [
-          {
-            "pid": 3,
-            "cpu_restante": 3
-          }
-        ]
-      ],
-      "io": [
-        {
-          "pid": 1,
-          "tipo": "IMPRESSORA",
-          "restante": 7
-        }
-      ]
-    },
-    {
-      "tempo": 13,
-      "eventos": [
-        "Processo [P1] está realizando E/S do tipo IMPRESSORA no intervalo [13, 14]. Tempo restante de E/S: 6.",
-        "Processo [P2] está executando no intervalo [13, 14]. CPU restante: 17. Tempo restante (CPU+E/S): 20. Quantum restante: 0.",
-        "Processo [P2] foi movido para a fila de prioridade 2."
-      ],
-      "cpu": {
-        "pid": 2,
-        "cpu_restante": 17,
-        "quantum_restante": 0
-      },
-      "io_ativo": 1,
-      "prontos": [
-        [],
-        [],
-        [
-          {
-            "pid": 3,
-            "cpu_restante": 3
-          },
-          {
-            "pid": 2,
-            "cpu_restante": 17
-          }
-        ]
-      ],
-      "io": [
-        {
-          "pid": 1,
-          "tipo": "IMPRESSORA",
-          "restante": 6
-        }
-      ]
-    },
-    {
-      "tempo": 14,
-      "eventos": [
-        "Processo [P3] foi selecionado da fila de prioridade 2 com quantum 6.",
-        "Processo [P1] está realizando E/S do tipo IMPRESSORA no intervalo [14, 15]. Tempo restante de E/S: 5.",
-        "Processo [P3] está executando no intervalo [14, 15]. CPU restante: 2. Tempo restante (CPU+E/S): 2. Quantum restante: 5."
-      ],
-      "cpu": {
-        "pid": 3,
-        "cpu_restante": 2,
-        "quantum_restante": 5
-      },
-      "io_ativo": 1,
-      "prontos": [
-        [],
-        [],
-        [
-          {
-            "pid": 2,
-            "cpu_restante": 17
-          }
-        ]
-      ],
-      "io": [
-        {
-          "pid": 1,
-          "tipo": "IMPRESSORA",
-          "restante": 5
-        }
-      ]
-    },
-    {
       "tempo": 15,
       "eventos": [
-        "Processo [P1] está realizando E/S do tipo IMPRESSORA no intervalo [15, 16]. Tempo restante de E/S: 4.",
-        "Processo [P3] está executando no intervalo [15, 16]. CPU restante: 1. Tempo restante (CPU+E/S): 1. Quantum restante: 4."
+        "Processo [P2] está realizando E/S do tipo FITA no intervalo [15, 16]. Tempo restante de E/S: 1.",
+        "Processo [P3] está executando no intervalo [15, 16]. CPU restante: 10. Tempo restante (CPU+E/S): 17. Quantum restante: 2."
       ],
       "cpu": {
         "pid": 3,
-        "cpu_restante": 1,
-        "quantum_restante": 4
+        "cpu_restante": 10,
+        "quantum_restante": 2
       },
-      "io_ativo": 1,
+      "io_ativo": 2,
       "prontos": [
         [],
         [],
-        [
-          {
-            "pid": 2,
-            "cpu_restante": 17
-          }
-        ]
+        []
       ],
       "io": [
         {
           "pid": 1,
-          "tipo": "IMPRESSORA",
-          "restante": 4
+          "tipo": "DISCO",
+          "restante": 3
         }
       ]
     },
     {
       "tempo": 16,
       "eventos": [
-        "Processo [P1] está realizando E/S do tipo IMPRESSORA no intervalo [16, 17]. Tempo restante de E/S: 3.",
-        "Processo [P3] está executando no intervalo [16, 17]. CPU restante: 0. Tempo restante (CPU+E/S): 0. Quantum restante: 3.",
-        "Processo [P3] terminou de executar no tempo 17."
+        "Processo [P2] está realizando E/S do tipo FITA no intervalo [16, 17]. Tempo restante de E/S: 0.",
+        "Processo [P2] terminou a E/S do tipo FITA no tempo 17.",
+        "Processo [P2] foi movido para a fila de prioridade 0 após E/S do tipo FITA.",
+        "Processo [P3] está executando no intervalo [16, 17]. CPU restante: 9. Tempo restante (CPU+E/S): 16. Quantum restante: 1."
       ],
       "cpu": {
         "pid": 3,
-        "cpu_restante": 0,
-        "quantum_restante": 3
+        "cpu_restante": 9,
+        "quantum_restante": 1
       },
-      "io_ativo": 1,
+      "io_ativo": 2,
       "prontos": [
         [],
         [],
-        [
-          {
-            "pid": 2,
-            "cpu_restante": 17
-          }
-        ]
+        []
       ],
       "io": [
         {
           "pid": 1,
-          "tipo": "IMPRESSORA",
+          "tipo": "DISCO",
           "restante": 3
         }
       ]
@@ -554,150 +428,157 @@
     {
       "tempo": 17,
       "eventos": [
-        "Processo [P2] foi selecionado da fila de prioridade 2 com quantum 6.",
-        "Processo [P1] está realizando E/S do tipo IMPRESSORA no intervalo [17, 18]. Tempo restante de E/S: 2.",
-        "Processo [P2] está executando no intervalo [17, 18]. CPU restante: 16. Tempo restante (CPU+E/S): 19. Quantum restante: 5."
+        "Processo [P1] está realizando E/S do tipo DISCO no intervalo [17, 18]. Tempo restante de E/S: 2.",
+        "Processo [P3] está executando no intervalo [17, 18]. CPU restante: 8. Tempo restante (CPU+E/S): 15. Quantum restante: 0.",
+        "Processo [P3] foi movido para a fila de prioridade 2."
       ],
       "cpu": {
-        "pid": 2,
-        "cpu_restante": 16,
-        "quantum_restante": 5
-      },
-      "io_ativo": 1,
-      "prontos": [
-        [],
-        [],
-        []
-      ],
-      "io": [
-        {
-          "pid": 1,
-          "tipo": "IMPRESSORA",
-          "restante": 2
-        }
-      ]
-    },
-    {
-      "tempo": 18,
-      "eventos": [
-        "Processo [P1] está realizando E/S do tipo IMPRESSORA no intervalo [18, 19]. Tempo restante de E/S: 1.",
-        "Processo [P2] está executando no intervalo [18, 19]. CPU restante: 15. Tempo restante (CPU+E/S): 18. Quantum restante: 4."
-      ],
-      "cpu": {
-        "pid": 2,
-        "cpu_restante": 15,
-        "quantum_restante": 4
-      },
-      "io_ativo": 1,
-      "prontos": [
-        [],
-        [],
-        []
-      ],
-      "io": [
-        {
-          "pid": 1,
-          "tipo": "IMPRESSORA",
-          "restante": 1
-        }
-      ]
-    },
-    {
-      "tempo": 19,
-      "eventos": [
-        "Processo [P1] está realizando E/S do tipo IMPRESSORA no intervalo [19, 20]. Tempo restante de E/S: 0.",
-        "Processo [P1] terminou a E/S do tipo IMPRESSORA no tempo 20.",
-        "Processo [P1] foi movido para a fila de prioridade 0 após E/S do tipo IMPRESSORA.",
-        "Processo [P2] está executando no intervalo [19, 20]. CPU restante: 14. Tempo restante (CPU+E/S): 17. Quantum restante: 3."
-      ],
-      "cpu": {
-        "pid": 2,
-        "cpu_restante": 14,
-        "quantum_restante": 3
+        "pid": 3,
+        "cpu_restante": 8,
+        "quantum_restante": 0
       },
       "io_ativo": 1,
       "prontos": [
         [
           {
-            "pid": 1,
-            "cpu_restante": 8
+            "pid": 2,
+            "cpu_restante": 11
           }
         ],
         [],
         []
+      ],
+      "io": []
+    },
+    {
+      "tempo": 18,
+      "eventos": [
+        "Processo [P2] foi selecionado da fila de prioridade 0 com quantum 2.",
+        "Processo [P1] está realizando E/S do tipo DISCO no intervalo [18, 19]. Tempo restante de E/S: 1.",
+        "Processo [P2] está executando no intervalo [18, 19]. CPU restante: 10. Tempo restante (CPU+E/S): 10. Quantum restante: 1."
+      ],
+      "cpu": {
+        "pid": 2,
+        "cpu_restante": 10,
+        "quantum_restante": 1
+      },
+      "io_ativo": 1,
+      "prontos": [
+        [],
+        [],
+        [
+          {
+            "pid": 3,
+            "cpu_restante": 8
+          }
+        ]
+      ],
+      "io": []
+    },
+    {
+      "tempo": 19,
+      "eventos": [
+        "Processo [P1] está realizando E/S do tipo DISCO no intervalo [19, 20]. Tempo restante de E/S: 0.",
+        "Processo [P1] terminou a E/S do tipo DISCO no tempo 20.",
+        "Processo [P1] foi movido para a fila de prioridade 2 após E/S do tipo DISCO.",
+        "Processo [P2] está executando no intervalo [19, 20]. CPU restante: 9. Tempo restante (CPU+E/S): 9. Quantum restante: 0.",
+        "Processo [P2] foi movido para a fila de prioridade 1."
+      ],
+      "cpu": {
+        "pid": 2,
+        "cpu_restante": 9,
+        "quantum_restante": 0
+      },
+      "io_ativo": 1,
+      "prontos": [
+        [],
+        [],
+        [
+          {
+            "pid": 3,
+            "cpu_restante": 8
+          }
+        ]
       ],
       "io": []
     },
     {
       "tempo": 20,
       "eventos": [
-        "Processo [P2] está executando no intervalo [20, 21]. CPU restante: 13. Tempo restante (CPU+E/S): 16. Quantum restante: 2."
+        "Processo [P2] foi selecionado da fila de prioridade 1 com quantum 4.",
+        "Processo [P2] está executando no intervalo [20, 21]. CPU restante: 8. Tempo restante (CPU+E/S): 8. Quantum restante: 3."
       ],
       "cpu": {
         "pid": 2,
-        "cpu_restante": 13,
-        "quantum_restante": 2
+        "cpu_restante": 8,
+        "quantum_restante": 3
       },
       "io_ativo": null,
       "prontos": [
+        [],
+        [],
         [
           {
-            "pid": 1,
+            "pid": 3,
             "cpu_restante": 8
+          },
+          {
+            "pid": 1,
+            "cpu_restante": 1
           }
-        ],
-        [],
-        []
+        ]
       ],
       "io": []
     },
     {
       "tempo": 21,
       "eventos": [
-        "Processo [P2] está executando no intervalo [21, 22]. CPU restante: 12. Tempo restante (CPU+E/S): 15. Quantum restante: 1."
+        "Processo [P2] está executando no intervalo [21, 22]. CPU restante: 7. Tempo restante (CPU+E/S): 7. Quantum restante: 2."
       ],
       "cpu": {
         "pid": 2,
-        "cpu_restante": 12,
-        "quantum_restante": 1
+        "cpu_restante": 7,
+        "quantum_restante": 2
       },
       "io_ativo": null,
       "prontos": [
+        [],
+        [],
         [
           {
-            "pid": 1,
+            "pid": 3,
             "cpu_restante": 8
+          },
+          {
+            "pid": 1,
+            "cpu_restante": 1
           }
-        ],
-        [],
-        []
+        ]
       ],
       "io": []
     },
     {
       "tempo": 22,
       "eventos": [
-        "Processo [P2] está executando no intervalo [22, 23]. CPU restante: 11. Tempo restante (CPU+E/S): 14. Quantum restante: 0.",
-        "Processo [P2] permaneceu na fila de prioridade 2."
+        "Processo [P2] está executando no intervalo [22, 23]. CPU restante: 6. Tempo restante (CPU+E/S): 6. Quantum restante: 1."
       ],
       "cpu": {
         "pid": 2,
-        "cpu_restante": 11,
-        "quantum_restante": 0
+        "cpu_restante": 6,
+        "quantum_restante": 1
       },
       "io_ativo": null,
       "prontos": [
-        [
-          {
-            "pid": 1,
-            "cpu_restante": 8
-          }
-        ],
+        [],
         [],
         [
           {
-            "pid": 2,
-            "cpu_restante": 11
+            "pid": 3,
+            "cpu_restante": 8
+          },
+          {
+            "pid": 1,
+            "cpu_restante": 1
           }
         ]
       ],
@@ -706,13 +587,13 @@
     {
       "tempo": 23,
       "eventos": [
-        "Processo [P1] foi selecionado da fila de prioridade 0 com quantum 2.",
-        "Processo [P1] está executando no intervalo [23, 24]. CPU restante: 7. Tempo restante (CPU+E/S): 10. Quantum restante: 1."
+        "Processo [P2] está executando no intervalo [23, 24]. CPU restante: 5. Tempo restante (CPU+E/S): 5. Quantum restante: 0.",
+        "Processo [P2] foi movido para a fila de prioridade 2."
       ],
       "cpu": {
-        "pid": 1,
-        "cpu_restante": 7,
-        "quantum_restante": 1
+        "pid": 2,
+        "cpu_restante": 5,
+        "quantum_restante": 0
       },
       "io_ativo": null,
       "prontos": [
@@ -720,8 +601,12 @@
         [],
         [
           {
-            "pid": 2,
-            "cpu_restante": 11
+            "pid": 3,
+            "cpu_restante": 8
+          },
+          {
+            "pid": 1,
+            "cpu_restante": 1
           }
         ]
       ],
@@ -730,27 +615,26 @@
     {
       "tempo": 24,
       "eventos": [
-        "Processo [P1] está executando no intervalo [24, 25]. CPU restante: 6. Tempo restante (CPU+E/S): 9. Quantum restante: 0.",
-        "Processo [P1] foi movido para a fila de prioridade 1."
+        "Processo [P3] foi selecionado da fila de prioridade 2 com quantum 6.",
+        "Processo [P3] está executando no intervalo [24, 25]. CPU restante: 7. Tempo restante (CPU+E/S): 14. Quantum restante: 5."
       ],
       "cpu": {
-        "pid": 1,
-        "cpu_restante": 6,
-        "quantum_restante": 0
+        "pid": 3,
+        "cpu_restante": 7,
+        "quantum_restante": 5
       },
       "io_ativo": null,
       "prontos": [
         [],
+        [],
         [
           {
             "pid": 1,
-            "cpu_restante": 6
-          }
-        ],
-        [
+            "cpu_restante": 1
+          },
           {
             "pid": 2,
-            "cpu_restante": 11
+            "cpu_restante": 5
           }
         ]
       ],
@@ -759,13 +643,12 @@
     {
       "tempo": 25,
       "eventos": [
-        "Processo [P1] foi selecionado da fila de prioridade 1 com quantum 4.",
-        "Processo [P1] está executando no intervalo [25, 26]. CPU restante: 5. Tempo restante (CPU+E/S): 8. Quantum restante: 3."
+        "Processo [P3] está executando no intervalo [25, 26]. CPU restante: 6. Tempo restante (CPU+E/S): 13. Quantum restante: 4."
       ],
       "cpu": {
-        "pid": 1,
-        "cpu_restante": 5,
-        "quantum_restante": 3
+        "pid": 3,
+        "cpu_restante": 6,
+        "quantum_restante": 4
       },
       "io_ativo": null,
       "prontos": [
@@ -773,8 +656,12 @@
         [],
         [
           {
+            "pid": 1,
+            "cpu_restante": 1
+          },
+          {
             "pid": 2,
-            "cpu_restante": 11
+            "cpu_restante": 5
           }
         ]
       ],
@@ -783,12 +670,12 @@
     {
       "tempo": 26,
       "eventos": [
-        "Processo [P1] está executando no intervalo [26, 27]. CPU restante: 4. Tempo restante (CPU+E/S): 7. Quantum restante: 2."
+        "Processo [P3] está executando no intervalo [26, 27]. CPU restante: 5. Tempo restante (CPU+E/S): 12. Quantum restante: 3."
       ],
       "cpu": {
-        "pid": 1,
-        "cpu_restante": 4,
-        "quantum_restante": 2
+        "pid": 3,
+        "cpu_restante": 5,
+        "quantum_restante": 3
       },
       "io_ativo": null,
       "prontos": [
@@ -796,8 +683,12 @@
         [],
         [
           {
+            "pid": 1,
+            "cpu_restante": 1
+          },
+          {
             "pid": 2,
-            "cpu_restante": 11
+            "cpu_restante": 5
           }
         ]
       ],
@@ -806,12 +697,12 @@
     {
       "tempo": 27,
       "eventos": [
-        "Processo [P1] está executando no intervalo [27, 28]. CPU restante: 3. Tempo restante (CPU+E/S): 6. Quantum restante: 1."
+        "Processo [P3] está executando no intervalo [27, 28]. CPU restante: 4. Tempo restante (CPU+E/S): 11. Quantum restante: 2."
       ],
       "cpu": {
-        "pid": 1,
-        "cpu_restante": 3,
-        "quantum_restante": 1
+        "pid": 3,
+        "cpu_restante": 4,
+        "quantum_restante": 2
       },
       "io_ativo": null,
       "prontos": [
@@ -819,8 +710,12 @@
         [],
         [
           {
+            "pid": 1,
+            "cpu_restante": 1
+          },
+          {
             "pid": 2,
-            "cpu_restante": 11
+            "cpu_restante": 5
           }
         ]
       ],
@@ -829,13 +724,14 @@
     {
       "tempo": 28,
       "eventos": [
-        "Processo [P1] está executando no intervalo [28, 29]. CPU restante: 2. Tempo restante (CPU+E/S): 5. Quantum restante: 0.",
-        "Processo [P1] foi movido para a fila de prioridade 2."
+        "Processo [P3] está executando no intervalo [28, 29]. CPU restante: 3. Tempo restante (CPU+E/S): 10. Quantum restante: 1.",
+        "Processo [P3] solicitou E/S do tipo FITA no tempo 29.",
+        "Processo [P3] foi movido para a fila de E/S."
       ],
       "cpu": {
-        "pid": 1,
-        "cpu_restante": 2,
-        "quantum_restante": 0
+        "pid": 3,
+        "cpu_restante": 3,
+        "quantum_restante": 1
       },
       "io_ativo": null,
       "prontos": [
@@ -843,12 +739,12 @@
         [],
         [
           {
-            "pid": 2,
-            "cpu_restante": 11
+            "pid": 1,
+            "cpu_restante": 1
           },
           {
-            "pid": 1,
-            "cpu_restante": 2
+            "pid": 2,
+            "cpu_restante": 5
           }
         ]
       ],
@@ -857,22 +753,24 @@
     {
       "tempo": 29,
       "eventos": [
-        "Processo [P2] foi selecionado da fila de prioridade 2 com quantum 6.",
-        "Processo [P2] está executando no intervalo [29, 30]. CPU restante: 10. Tempo restante (CPU+E/S): 13. Quantum restante: 5."
+        "Processo [P1] foi selecionado da fila de prioridade 2 com quantum 6.",
+        "Processo [P3] está realizando E/S do tipo FITA no intervalo [29, 30]. Tempo restante de E/S: 6.",
+        "Processo [P1] está executando no intervalo [29, 30]. CPU restante: 0. Tempo restante (CPU+E/S): 0. Quantum restante: 5.",
+        "Processo [P1] terminou de executar no tempo 30."
       ],
       "cpu": {
-        "pid": 2,
-        "cpu_restante": 10,
+        "pid": 1,
+        "cpu_restante": 0,
         "quantum_restante": 5
       },
-      "io_ativo": null,
+      "io_ativo": 3,
       "prontos": [
         [],
         [],
         [
           {
-            "pid": 1,
-            "cpu_restante": 2
+            "pid": 2,
+            "cpu_restante": 5
           }
         ]
       ],
@@ -881,346 +779,165 @@
     {
       "tempo": 30,
       "eventos": [
-        "Processo [P2] está executando no intervalo [30, 31]. CPU restante: 9. Tempo restante (CPU+E/S): 12. Quantum restante: 4."
+        "Processo [P2] foi selecionado da fila de prioridade 2 com quantum 6.",
+        "Processo [P3] está realizando E/S do tipo FITA no intervalo [30, 31]. Tempo restante de E/S: 5.",
+        "Processo [P2] está executando no intervalo [30, 31]. CPU restante: 4. Tempo restante (CPU+E/S): 4. Quantum restante: 5."
       ],
       "cpu": {
         "pid": 2,
-        "cpu_restante": 9,
-        "quantum_restante": 4
+        "cpu_restante": 4,
+        "quantum_restante": 5
       },
-      "io_ativo": null,
+      "io_ativo": 3,
       "prontos": [
         [],
         [],
-        [
-          {
-            "pid": 1,
-            "cpu_restante": 2
-          }
-        ]
+        []
       ],
       "io": []
     },
     {
       "tempo": 31,
       "eventos": [
-        "Processo [P2] está executando no intervalo [31, 32]. CPU restante: 8. Tempo restante (CPU+E/S): 11. Quantum restante: 3."
+        "Processo [P3] está realizando E/S do tipo FITA no intervalo [31, 32]. Tempo restante de E/S: 4.",
+        "Processo [P2] está executando no intervalo [31, 32]. CPU restante: 3. Tempo restante (CPU+E/S): 3. Quantum restante: 4."
       ],
       "cpu": {
         "pid": 2,
-        "cpu_restante": 8,
-        "quantum_restante": 3
+        "cpu_restante": 3,
+        "quantum_restante": 4
       },
-      "io_ativo": null,
+      "io_ativo": 3,
       "prontos": [
         [],
         [],
-        [
-          {
-            "pid": 1,
-            "cpu_restante": 2
-          }
-        ]
+        []
       ],
       "io": []
     },
     {
       "tempo": 32,
       "eventos": [
-        "Processo [P2] está executando no intervalo [32, 33]. CPU restante: 7. Tempo restante (CPU+E/S): 10. Quantum restante: 2."
+        "Processo [P3] está realizando E/S do tipo FITA no intervalo [32, 33]. Tempo restante de E/S: 3.",
+        "Processo [P2] está executando no intervalo [32, 33]. CPU restante: 2. Tempo restante (CPU+E/S): 2. Quantum restante: 3."
       ],
       "cpu": {
         "pid": 2,
-        "cpu_restante": 7,
-        "quantum_restante": 2
+        "cpu_restante": 2,
+        "quantum_restante": 3
       },
-      "io_ativo": null,
+      "io_ativo": 3,
       "prontos": [
         [],
         [],
-        [
-          {
-            "pid": 1,
-            "cpu_restante": 2
-          }
-        ]
+        []
       ],
       "io": []
     },
     {
       "tempo": 33,
       "eventos": [
-        "Processo [P2] está executando no intervalo [33, 34]. CPU restante: 6. Tempo restante (CPU+E/S): 9. Quantum restante: 1.",
-        "Processo [P2] solicitou E/S do tipo DISCO no tempo 34.",
-        "Processo [P2] foi movido para a fila de E/S."
+        "Processo [P3] está realizando E/S do tipo FITA no intervalo [33, 34]. Tempo restante de E/S: 2.",
+        "Processo [P2] está executando no intervalo [33, 34]. CPU restante: 1. Tempo restante (CPU+E/S): 1. Quantum restante: 2."
       ],
       "cpu": {
         "pid": 2,
-        "cpu_restante": 6,
-        "quantum_restante": 1
+        "cpu_restante": 1,
+        "quantum_restante": 2
       },
-      "io_ativo": null,
+      "io_ativo": 3,
       "prontos": [
         [],
         [],
-        [
-          {
-            "pid": 1,
-            "cpu_restante": 2
-          }
-        ]
+        []
       ],
-      "io": [
-        {
-          "pid": 2,
-          "tipo": "DISCO",
-          "restante": 3
-        }
-      ]
+      "io": []
     },
     {
       "tempo": 34,
       "eventos": [
-        "Processo [P1] foi selecionado da fila de prioridade 2 com quantum 6.",
-        "Processo [P2] está realizando E/S do tipo DISCO no intervalo [34, 35]. Tempo restante de E/S: 2.",
-        "Processo [P1] está executando no intervalo [34, 35]. CPU restante: 1. Tempo restante (CPU+E/S): 4. Quantum restante: 5.",
-        "Processo [P1] solicitou E/S do tipo DISCO no tempo 35.",
-        "Processo [P1] foi movido para a fila de E/S."
+        "Processo [P3] está realizando E/S do tipo FITA no intervalo [34, 35]. Tempo restante de E/S: 1.",
+        "Processo [P2] está executando no intervalo [34, 35]. CPU restante: 0. Tempo restante (CPU+E/S): 0. Quantum restante: 1.",
+        "Processo [P2] terminou de executar no tempo 35."
       ],
       "cpu": {
-        "pid": 1,
-        "cpu_restante": 1,
-        "quantum_restante": 5
+        "pid": 2,
+        "cpu_restante": 0,
+        "quantum_restante": 1
       },
-      "io_ativo": 2,
+      "io_ativo": 3,
       "prontos": [
         [],
         [],
         []
       ],
-      "io": [
-        {
-          "pid": 2,
-          "tipo": "DISCO",
-          "restante": 2
-        },
-        {
-          "pid": 1,
-          "tipo": "DISCO",
-          "restante": 3
-        }
-      ]
+      "io": []
     },
     {
       "tempo": 35,
       "eventos": [
-        "Processo [P2] está realizando E/S do tipo DISCO no intervalo [35, 36]. Tempo restante de E/S: 1."
+        "Processo [P3] está realizando E/S do tipo FITA no intervalo [35, 36]. Tempo restante de E/S: 0.",
+        "Processo [P3] terminou a E/S do tipo FITA no tempo 36.",
+        "Processo [P3] foi movido para a fila de prioridade 0 após E/S do tipo FITA."
       ],
       "cpu": null,
-      "io_ativo": 2,
+      "io_ativo": 3,
       "prontos": [
         [],
         [],
         []
       ],
-      "io": [
-        {
-          "pid": 2,
-          "tipo": "DISCO",
-          "restante": 1
-        },
-        {
-          "pid": 1,
-          "tipo": "DISCO",
-          "restante": 3
-        }
-      ]
+      "io": []
     },
     {
       "tempo": 36,
       "eventos": [
-        "Processo [P2] está realizando E/S do tipo DISCO no intervalo [36, 37]. Tempo restante de E/S: 0.",
-        "Processo [P2] terminou a E/S do tipo DISCO no tempo 37.",
-        "Processo [P2] foi movido para a fila de prioridade 2 após E/S do tipo DISCO."
-      ],
-      "cpu": null,
-      "io_ativo": 2,
-      "prontos": [
-        [],
-        [],
-        [
-          {
-            "pid": 2,
-            "cpu_restante": 6
-          }
-        ]
-      ],
-      "io": [
-        {
-          "pid": 1,
-          "tipo": "DISCO",
-          "restante": 3
-        }
-      ]
-    },
-    {
-      "tempo": 37,
-      "eventos": [
-        "Processo [P2] foi selecionado da fila de prioridade 2 com quantum 6.",
-        "Processo [P1] está realizando E/S do tipo DISCO no intervalo [37, 38]. Tempo restante de E/S: 2.",
-        "Processo [P2] está executando no intervalo [37, 38]. CPU restante: 5. Tempo restante (CPU+E/S): 5. Quantum restante: 5."
+        "Processo [P3] foi selecionado da fila de prioridade 0 com quantum 2.",
+        "Processo [P3] está executando no intervalo [36, 37]. CPU restante: 2. Tempo restante (CPU+E/S): 2. Quantum restante: 1."
       ],
       "cpu": {
-        "pid": 2,
-        "cpu_restante": 5,
-        "quantum_restante": 5
-      },
-      "io_ativo": 1,
-      "prontos": [
-        [],
-        [],
-        []
-      ],
-      "io": [
-        {
-          "pid": 1,
-          "tipo": "DISCO",
-          "restante": 2
-        }
-      ]
-    },
-    {
-      "tempo": 38,
-      "eventos": [
-        "Processo [P1] está realizando E/S do tipo DISCO no intervalo [38, 39]. Tempo restante de E/S: 1.",
-        "Processo [P2] está executando no intervalo [38, 39]. CPU restante: 4. Tempo restante (CPU+E/S): 4. Quantum restante: 4."
-      ],
-      "cpu": {
-        "pid": 2,
-        "cpu_restante": 4,
-        "quantum_restante": 4
-      },
-      "io_ativo": 1,
-      "prontos": [
-        [],
-        [],
-        []
-      ],
-      "io": [
-        {
-          "pid": 1,
-          "tipo": "DISCO",
-          "restante": 1
-        }
-      ]
-    },
-    {
-      "tempo": 39,
-      "eventos": [
-        "Processo [P1] está realizando E/S do tipo DISCO no intervalo [39, 40]. Tempo restante de E/S: 0.",
-        "Processo [P1] terminou a E/S do tipo DISCO no tempo 40.",
-        "Processo [P1] foi movido para a fila de prioridade 2 após E/S do tipo DISCO.",
-        "Processo [P2] está executando no intervalo [39, 40]. CPU restante: 3. Tempo restante (CPU+E/S): 3. Quantum restante: 3."
-      ],
-      "cpu": {
-        "pid": 2,
-        "cpu_restante": 3,
-        "quantum_restante": 3
-      },
-      "io_ativo": 1,
-      "prontos": [
-        [],
-        [],
-        [
-          {
-            "pid": 1,
-            "cpu_restante": 1
-          }
-        ]
-      ],
-      "io": []
-    },
-    {
-      "tempo": 40,
-      "eventos": [
-        "Processo [P2] está executando no intervalo [40, 41]. CPU restante: 2. Tempo restante (CPU+E/S): 2. Quantum restante: 2."
-      ],
-      "cpu": {
-        "pid": 2,
+        "pid": 3,
         "cpu_restante": 2,
-        "quantum_restante": 2
-      },
-      "io_ativo": null,
-      "prontos": [
-        [],
-        [],
-        [
-          {
-            "pid": 1,
-            "cpu_restante": 1
-          }
-        ]
-      ],
-      "io": []
-    },
-    {
-      "tempo": 41,
-      "eventos": [
-        "Processo [P2] está executando no intervalo [41, 42]. CPU restante: 1. Tempo restante (CPU+E/S): 1. Quantum restante: 1."
-      ],
-      "cpu": {
-        "pid": 2,
-        "cpu_restante": 1,
         "quantum_restante": 1
       },
       "io_ativo": null,
       "prontos": [
         [],
         [],
-        [
-          {
-            "pid": 1,
-            "cpu_restante": 1
-          }
-        ]
+        []
       ],
       "io": []
     },
     {
-      "tempo": 42,
+      "tempo": 37,
       "eventos": [
-        "Processo [P2] está executando no intervalo [42, 43]. CPU restante: 0. Tempo restante (CPU+E/S): 0. Quantum restante: 0.",
-        "Processo [P2] terminou de executar no tempo 43."
+        "Processo [P3] está executando no intervalo [37, 38]. CPU restante: 1. Tempo restante (CPU+E/S): 1. Quantum restante: 0.",
+        "Processo [P3] foi movido para a fila de prioridade 1."
       ],
       "cpu": {
-        "pid": 2,
-        "cpu_restante": 0,
+        "pid": 3,
+        "cpu_restante": 1,
         "quantum_restante": 0
       },
       "io_ativo": null,
       "prontos": [
         [],
         [],
-        [
-          {
-            "pid": 1,
-            "cpu_restante": 1
-          }
-        ]
+        []
       ],
       "io": []
     },
     {
-      "tempo": 43,
+      "tempo": 38,
       "eventos": [
-        "Processo [P1] foi selecionado da fila de prioridade 2 com quantum 6.",
-        "Processo [P1] está executando no intervalo [43, 44]. CPU restante: 0. Tempo restante (CPU+E/S): 0. Quantum restante: 5.",
-        "Processo [P1] terminou de executar no tempo 44."
+        "Processo [P3] foi selecionado da fila de prioridade 1 com quantum 4.",
+        "Processo [P3] está executando no intervalo [38, 39]. CPU restante: 0. Tempo restante (CPU+E/S): 0. Quantum restante: 3.",
+        "Processo [P3] terminou de executar no tempo 39."
       ],
       "cpu": {
-        "pid": 1,
+        "pid": 3,
         "cpu_restante": 0,
-        "quantum_restante": 5
+        "quantum_restante": 3
       },
       "io_ativo": null,
       "prontos": [
@@ -1234,21 +951,21 @@
   "resultado": [
     {
       "pid": 1,
-      "chegada": 5,
-      "termino": 44,
-      "turnaround": 39
+      "chegada": 4,
+      "termino": 30,
+      "turnaround": 26
     },
     {
       "pid": 2,
-      "chegada": 5,
-      "termino": 43,
-      "turnaround": 38
+      "chegada": 3,
+      "termino": 35,
+      "turnaround": 32
     },
     {
       "pid": 3,
-      "chegada": 0,
-      "termino": 17,
-      "turnaround": 17
+      "chegada": 10,
+      "termino": 39,
+      "turnaround": 29
     }
   ]
 }

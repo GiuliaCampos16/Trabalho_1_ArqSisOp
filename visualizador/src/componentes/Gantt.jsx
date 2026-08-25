@@ -3,9 +3,15 @@ import Pid from './Pid'
 import { corProcesso, hachuraIO, estadoDoProcesso } from '../cores'
 import { UI } from '../ui'
 
-const LARGURA = 14
-const ALTURA = 20
+const ALTURA = 30
 const INTERVALO_REGUA = 5
+
+function larguraCelula(passos) {
+  if (passos <= 30) return 32
+  if (passos <= 50) return 22
+  if (passos <= 80) return 15
+  return 11
+}
 
 const ESTADOS = [
   ['executando', 'Executando'],
@@ -38,6 +44,7 @@ function Legenda({ pid }) {
 
 export default function Gantt({ trace, indice, setIndice }) {
   const marcadorRef = useRef(null)
+  const LARGURA = larguraCelula(trace.passos.length)
 
   useEffect(() => {
     marcadorRef.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
@@ -60,7 +67,18 @@ export default function Gantt({ trace, indice, setIndice }) {
         </div>
 
         <div className="flex-1 overflow-x-auto">
-          <div style={{ width: largura }}>
+          <div className="relative" style={{ width: largura }}>
+
+            <div
+              className="pointer-events-none absolute z-10 border-x-2 border-foreground"
+              style={{
+                left: indice * LARGURA,
+                width: LARGURA,
+                top: ALTURA,
+                height: ALTURA * trace.processos.length,
+              }}
+              aria-hidden
+            />
 
             <div className="relative border-b border-border" style={{ height: ALTURA }} aria-hidden>
               {passos.map((passo, i) =>
@@ -82,17 +100,16 @@ export default function Gantt({ trace, indice, setIndice }) {
               <div key={processo.pid} className="flex border-b border-border/40">
                 {passos.map((passo, i) => {
                   const estado = estadoDoProcesso(passo, processo.pid)
-                  const atual = i === indice
 
                   return (
                     <button
                       key={i}
-                      ref={atual && linha === 0 ? marcadorRef : null}
+                      ref={i === indice && linha === 0 ? marcadorRef : null}
                       onClick={() => setIndice(i)}
                       title={`t=${passo.tempo} · P${processo.pid} · ${estado ?? 'fora do sistema'}`}
                       className={`shrink-0 ${
                         passo.tempo % INTERVALO_REGUA === 0 ? 'border-l border-border/60' : ''
-                      } ${atual ? 'ring-1 ring-inset ring-foreground' : ''}`}
+                      }`}
                       style={{ width: LARGURA, height: ALTURA, ...estiloCelula(processo.pid, estado) }}
                     />
                   )
